@@ -1,0 +1,236 @@
+/* Reset */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Poppins', Arial, sans-serif;
+    background: linear-gradient(135deg, #e6fff0, #f0fff5); /* soft green gradient instead of pink */
+    color: #333;
+}
+
+/* Navbar */
+.navbar {
+    display: flex;
+    justify-content: center;
+    background: #2e7d32; /* dark green */
+    padding: 12px 0;
+    gap: 25px;
+    border: 2px solid #ccc;
+}
+
+.navbar a {
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+.navbar a:hover, .navbar a.active {
+    color: #e6fff0; /* light green highlight */
+    /* text-shadow: 0px 0px 8px rgba(255,255,255,0.7); */
+    text-decoration: underline;
+}
+
+
+/* Header top row */
+.header-top {
+    display: flex;
+    justify-content: space-between; /* left title, right user info */
+    align-items: center;
+    padding: 10px 20px; /* smaller height */
+    background: #2e7d32; /* dark green for male theme */
+    color: white;
+    /* border-radius: 8px 8px 0 0; /* rounded top corners */
+}
+
+.header-top h1 {
+    font-size: 22px; /* smaller size */
+    font-weight: 700;
+    margin: 0;
+}
+
+.header-top .user-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.header-top .user-actions a,
+.header-top .user-actions span {
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.2);
+    transition: 0.3s;
+}
+
+.header-top .user-actions a:hover {
+    background: rgba(255,255,255,0.35);
+}
+
+
+.user-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.user-actions a, .user-actions span {
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    padding: 8px 16px;
+    border-radius: 25px;
+    background: rgba(255,255,255,0.2);
+    transition: 0.3s;
+}
+
+.user-actions a:hover {
+    background: rgba(255,255,255,0.35);
+}
+
+/* Salon Buttons */
+.salon-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin: 15px 0;
+    flex-wrap: wrap;
+}
+
+.salon-buttons .btn {
+    padding: 12px 25px;
+    background: #2e7d32; /* dark green */
+    color: white;
+    text-decoration: none;
+    border-radius: 50px;
+    font-weight: 700;
+    box-shadow: 0 4px 10px rgba(46,125,50,0.4);
+    transition: 0.3s;
+}
+
+.salon-buttons .btn:hover {
+    background: #388e3c; /* slightly lighter green */
+    box-shadow: 0 6px 15px rgba(56,142,60,0.5);
+}
+
+/* Main Content */
+main {
+    max-width: 500px;
+    margin: 50px auto;
+    padding: 35px;
+    background: #fff;
+    border-radius: 15px;
+    box-shadow: 0 6px 25px rgba(0,0,0,0.1);
+}
+
+/* Headings */
+h2 {
+    text-align: center;
+    margin-bottom: 25px;
+    color: #2e7d32; /* dark green */
+    font-size: 26px;
+    text-shadow: 1px 1px 3px rgba(46,125,50,0.3);
+}
+
+/* Labels & Inputs */
+label {
+    display: block;
+    margin-top: 15px;
+    font-weight: 600;
+    color: #555;
+}
+
+input {
+    width: 100%;
+    padding: 12px;
+    margin-top: 5px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    transition: 0.3s;
+}
+
+input:focus {
+    border-color: #2e7d32; /* green focus border */
+    box-shadow: 0 0 8px rgba(46,125,50,0.3);
+    outline: none;
+}
+
+/* Buttons */
+button {
+    width: 100%;
+    padding: 14px;
+    margin-top: 20px;
+    background: #2e7d32; /* dark green */
+    color: white;
+    border: none;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s;
+    box-shadow: 0 4px 12px rgba(46,125,50,0.4);
+}
+
+button:hover {
+    background: #388e3c; /* hover green */
+    box-shadow: 0 6px 18px rgba(56,142,60,0.5);
+}
+
+/* Alerts */
+.alert {
+    padding: 14px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    font-weight: 600;
+    text-align: center;
+    font-size: 15px;
+}
+
+.alert.success { 
+    background: #d4edda; 
+    color: #155724; 
+    border: 1px solid #c3e6cb;
+}
+
+.alert.error { 
+    background: #f8d7da; 
+    color: #721c24; 
+    border: 1px solid #f5c6cb;
+}
+
+/* Login/Register link */
+.login-link {
+    text-align: center;
+    margin-top: 25px;
+    font-weight: 500;
+}
+
+.login-link a {
+    color: #2e7d32; /* green */
+    font-weight: 700;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+.login-link a:hover {
+    color: #388e3c;
+    text-decoration: underline;
+}
+
+/* Responsive */
+@media screen and (max-width: 600px) {
+    main {
+        margin: 30px 15px;
+        padding: 25px;
+    }
+
+    header h1 {
+        font-size: 24px;
+    }
+}

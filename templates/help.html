@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Gloora Help Center</title>
+
+  <!-- CSS from static folder -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/help.css') }}" />
+</head>
+
+<body>
+
+<header>
+  <div class="logo">Gloora Help Center</div>
+  <input type="text" class="search-bar" placeholder="How can we help you?">
+
+  <div class="user-actions">
+      {% if session.get('username') %}
+          <span>Welcome, {{ session.get('username') }}</span>
+          <a href="{{ url_for('logout') }}" class="auth-btn">Logout</a>
+      {% else %}
+          <!-- <a href="{{ url_for('login') }}" class="auth-btn">Sign In</a> -->
+      {% endif %}
+  </div>
+</header>
+
+<div class="navbar">
+    <a href="{{ url_for('gender') }}">Home</a>
+    <a href="{{ url_for('about') }}">About</a>
+    <a href="{{ url_for('services_categories') }}" class="active">Services & Categories</a>
+    <a href="{{ url_for('contact_us') }}">Contact Us</a>
+    <a href="{{ url_for('help_page') }}">Help</a>
+</div>
+
+  <div class="container">
+    <div class="sign-in-box">
+      {% if login_required %}
+      <div class="login-required">
+        <strong>Login Required</strong>
+        <p class="par">Please><!-- <a href="{{ url_for('login_help') }}" -->login</a> to get help with your recent orders.</p>
+        <p class="des">  &rarr; Go Home Select gender Then Log IN</p>
+      </div>
+      {% endif %}
+    </div>
+
+    <h2>Browse Topics</h2>
+    <div class="topics">
+      <div class="topic">
+        <img src="https://img.icons8.com/ios-filled/50/shopping-cart.png" alt="Order">
+        <div>Order Related</div>
+        {% if login_required %}
+        <p class="par">Please <a href="{{ url_for('login_help') }}">login</a> to get help with your recent orders.</p>
+        {% endif %}
+      </div>
+      <div class="topic">
+        <img src="https://img.icons8.com/ios-filled/50/shopping-bag.png" alt="Shopping">
+        <div>Shopping</div>
+        {% if login_required %}
+        <p class="par">Please <a href="{{ url_for('login_help') }}">login</a> to get help with your recent orders.</p>
+        {% endif %}
+      </div>
+      <!-- Repeat for other topics -->
+    </div>
+</div>
+
+
+    <h2>Browse Topics</h2>
+    <div class="topics">
+      <div class="topic">
+        <img src="https://img.icons8.com/ios-filled/50/shopping-cart.png" alt="Order">
+        <div>Order Related</div>
+      </div>
+      <div class="topic">
+        <img src="https://img.icons8.com/ios-filled/50/shopping-bag.png" alt="Shopping">
+        <div>Shopping</div>
+      </div>
+      <div class="topic">
+        <img src="https://img.icons8.com/ios-filled/50/user.png" alt="Account">
+        <div>Gloora Account</div>
+      </div>
+      <div class="topic">
+        <img src="https://img.icons8.com/ios-filled/50/money.png" alt="Payments">
+        <div>Payments</div>
+      </div>
+      <div class="topic">
+        <img src="https://img.icons8.com/ios-filled/50/upload.png" alt="Sell">
+        <div>Sell On Gloora</div>
+      </div>
+      <div class="topic">
+        <img src="https://img.icons8.com/ios-filled/50/info.png" alt="Others">
+        <div>Others</div>
+      </div>
+    </div>
+
+    <h2>Need more help?</h2>
+    <div class="help-boxes">
+      <div class="help-box" id="chat-trigger">
+        <img src="https://img.icons8.com/ios-filled/50/speech-bubble.png" alt="Chat">
+        <div>
+          <strong>Chat with us</strong><br>
+          Get instant query assistance
+        </div>
+      </div>
+      <div class="help-box" id="call-support-trigger">
+        <img src="https://img.icons8.com/ios-filled/50/phone.png" alt="Call">
+        <div>
+          <strong>Call Support</strong><br>
+          Speak with our support team
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    &copy; 2025 Gloora Help Center. All rights reserved.
+  </footer>
+
+  <!-- Chatbot HTML -->
+  <div id="chatbot-box">
+    <div class="chat-header">
+      Gloora Assistant
+      <span id="chat-close">✖</span>
+    </div>
+    <div class="chat-body" id="chat-body">
+      <div class="bot-msg">Hi! How can I assist you today?</div>
+    </div>
+    <div class="chat-input">
+      <input type="text" id="user-input" placeholder="Type your message..." />
+      <button id="send-btn">Send</button>
+    </div>
+  </div>
+
+  <!-- Call Support Popup -->
+  <div id="call-support-modal" style="display: none;">
+    <div class="call-modal-content">
+      <span id="close-call-modal">✖</span>
+      <h2>Contact Gloora Support</h2>
+      <a href="tel:9112879562">📞 Call: 9112879562</a>
+      <a href="mailto:diveshkuthe8556@gmail.com">📧 Email: diveshkuthe8556@gmail.com</a>
+      <a href="https://wa.me/919112879562" target="_blank">💬 WhatsApp Chat</a>
+    </div>
+  </div>
+
+  <!-- JS from static folder -->
+  <script src="{{ url_for('static', filename='javascript/helpchatbot.js') }}"></script>
+</body>
+</html>

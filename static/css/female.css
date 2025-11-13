@@ -1,0 +1,122 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #ffe6f0;
+}
+
+header {
+    background: #ff66b3;
+    color: white;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 22px;
+}
+
+.user-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.user-actions a, .user-actions span {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    padding: 6px 12px;
+    border-radius: 5px;
+    background: rgba(255,255,255,0.2);
+}
+
+.user-actions a:hover {
+    background: rgba(255,255,255,0.4);
+}
+
+.salon-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin: 10px 0;
+}
+
+.salon-buttons .btn {
+    padding: 10px 20px;
+    background: #ff66b3;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+.salon-buttons .btn:hover {
+    background: #ff3399;
+}
+
+main {
+    max-width: 500px;
+    margin: 50px auto;
+    padding: 30px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0px 4px 15px rgba(0,0,0,0.1);
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 25px;
+    color: #ff66b3;
+}
+
+label {
+    display: block;
+    margin-top: 15px;
+    font-weight: bold;
+}
+
+input {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+button {
+    width: 100%;
+    padding: 12px;
+    margin-top: 20px;
+    background: #ff66b3;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #ff3399;
+}
+
+.alert {
+    padding: 12px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+}
+
+.alert.success { background: #d4edda; color: #155724; }
+.alert.error { background: #f8d7da; color: #721c24; }
+
+.login-link {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.login-link a {
+    color: #ff66b3;
+    font-weight: bold;
+    text-decoration: none;
+}

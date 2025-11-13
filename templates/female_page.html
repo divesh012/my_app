@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Gloora | Female</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/female.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Gloora Female User</h1>
+        <div class="user-actions">
+            {% if session.get('username') %}
+                <span>Welcome, {{ session.get('username') }}</span>
+                <a href="{{ url_for('logout') }}">Logout</a>
+            {% else %}
+                <a href="{{ url_for('female') }}">Register</a>
+                <a href="{{ url_for('female', login=1) }}">Login</a>
+            {% endif %}
+        </div>
+    </header>
+
+    {% if session.get('username') %}
+        <div class="salon-buttons">
+            <a href="{{ url_for('show_salons') }}" class="btn">Show Salons</a>
+            <a href="{{ url_for('register_salon') }}" class="btn">Register Salon</a>
+        </div>
+    {% endif %}
+
+    <main>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, msg in messages %}
+                    <div class="alert {{ category }}">{{ msg }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        {% if session.get('username') %}
+            <h2>Welcome, {{ session.get('username') }}!</h2>
+            <p>You are successfully logged in.</p>
+        {% elif show_login %}
+            <h2>Login</h2>
+            <form method="POST" action="{{ url_for('female') }}">
+                <input type="hidden" name="action" value="login">
+                <label>Username</label>
+                <input type="text" name="username" required>
+                <label>Email (Gmail)</label>
+                <input type="email" name="email" required>
+                <label>Password</label>
+                <input type="password" name="password" required>
+                <button type="submit">Login</button>
+            </form>
+        {% else %}
+            <h2>Register</h2>
+            <form method="POST" action="{{ url_for('female') }}">
+                <input type="hidden" name="action" value="register">
+                <label>Username</label>
+                <input type="text" name="username" required>
+                <label>Email (Gmail)</label>
+                <input type="email" name="email" required>
+                <label>Password</label>
+                <input type="password" name="password" required>
+                <button type="submit">Register</button>
+            </form>
+            <div class="login-link">
+                Already have an account? <a href="{{ url_for('female') }}?login=1">Login here</a>
+            </div>
+        {% endif %}
+    </main>
+
+</body>
+</html>

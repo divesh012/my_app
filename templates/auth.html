@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ gender_page|capitalize }} Login/Register</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; }
+        input { padding: 10px; margin: 10px; width: 250px; }
+        button { padding: 10px 20px; margin: 10px; cursor: pointer; }
+        .flash { color: red; }
+        .success { color: green; }
+    </style>
+</head>
+<body>
+    <h1>{{ gender_page|capitalize }} Login/Register</h1>
+
+    <!-- Flash messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <p class="{{ category }}">{{ message }}</p>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <form method="POST" action="{{ url_for(gender_page) }}">
+        <input type="text" name="username" placeholder="Username (e.g., JohnDoe)" required><br>
+        <input type="email" name="email" placeholder="Enter your Gmail (example@gmail.com)" pattern="[a-z0-9._%+-]+@gmail\.com" title="Must be a valid Gmail address" required><br>
+        <input type="password" name="password" placeholder="Password" required><br>
+        <button type="submit" name="action" value="login">Login</button>
+        <button type="submit" name="action" value="register">Register</button>
+    </form>
+
+    <br>
+    <a href="{{ url_for('gender') }}">Back to Gender Selection</a>
+</body>
+</html>

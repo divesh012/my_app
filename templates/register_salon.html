@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Register Salon</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        form {
+            max-width: 400px;
+            margin: 30px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        input {
+            padding: 12px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            padding: 12px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        a {
+            display: inline-block;
+            margin: 10px 15px;
+            text-decoration: none;
+            color: #4CAF50;
+            font-weight: bold;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .links {
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Register Salon</h1>
+
+    <form method="POST">
+        <input type="text" name="name" placeholder="Salon Name" required>
+        <input type="text" name="address" placeholder="Address">
+        <input type="text" name="city" placeholder="City" required>
+        <input type="text" name="state" placeholder="State" required>
+<input type="text" 
+       name="contact" 
+       placeholder="Contact Number" 
+       required 
+       pattern="\d{10}" 
+       maxlength="10" 
+       title="Enter a valid 10-digit contact number">
+
+        <!-- New Pass Key field (only 4 digits) -->
+        <input type="password" 
+               name="pass_key" 
+               placeholder="4-digit Pass Key" 
+               required 
+               pattern="\d{4}" 
+               maxlength="4"
+               title="Enter a 4-digit numeric pass key">
+
+        <button type="submit">Register</button>
+    </form>
+
+    <div class="links">
+        <a href="{{ url_for('show_salons') }}">View All Salons</a>
+        <a href="{{ url_for('gender') }}">Back to Home</a>
+    </div>
+</body>
+
+</html>

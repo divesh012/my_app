@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>All Salons</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f4f9;
+      margin: 0;
+      padding: 0;
+    }
+
+    .header-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 90%;
+      margin: 20px auto;
+    }
+
+    h1 {
+      color: #333;
+      margin: 0;
+    }
+
+    .search-container input[type="text"] {
+      display: none;
+      padding: 6px 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      width: 0;
+      transition: width 0.3s ease;
+    }
+
+    .search-container input[type="text"].active {
+      display: inline-block;
+      width: 220px;
+    }
+
+    .search-container button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 20px;
+      color: #4CAF50;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px auto;
+      background: white;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    table th,
+    table td {
+      text-align: center;
+      vertical-align: middle;
+      padding: 10px;
+      white-space: nowrap;
+    }
+
+    th {
+      background-color: #4CAF50;
+      color: white;
+    }
+
+    tr.owner-row {
+      background-color: #fff9c4;
+    }
+
+    tr:hover {
+      background-color: #f1f1f1;
+    }
+
+    /* Toggle buttons */
+    a.toggle-btn {
+      padding: 8px 14px;
+      border-radius: 6px;
+      color: white !important;
+      font-weight: bold;
+      text-decoration: none;
+      transition: 0.3s;
+      display: inline-block;
+    }
+
+    a.toggle-btn.on {
+      background-color: #4CAF50;
+    }
+
+    a.toggle-btn.on:hover {
+      background-color: #45a049;
+    }
+
+    a.toggle-btn.off {
+      background-color: #f44336;
+    }
+
+    a.toggle-btn.off:hover {
+      background-color: #e53935;
+    }
+
+    /* Book Slot button */
+    td a.book-btn {
+      padding: 6px 12px;
+      border-radius: 5px;
+      border: 1px solid #4CAF50;
+      color: #4CAF50;
+      font-weight: bold;
+      text-decoration: none;
+      transition: 0.3s;
+    }
+
+    td a.book-btn:hover {
+      background-color: #45a049;
+      color: white;
+    }
+
+    /* Disabled link */
+    .disabled-link {
+      color: gray;
+      border: 1px solid gray;
+      padding: 6px 12px;
+      border-radius: 5px;
+      pointer-events: none;
+      cursor: default;
+      display: inline-block;
+    }
+
+    .links {
+      text-align: center;
+      margin: 25px 0;
+    }
+
+    .links a {
+      margin: 0 10px;
+      padding: 10px 16px;
+      border-radius: 5px;
+      border: 1px solid #4CAF50;
+      color: #4CAF50;
+      font-weight: bold;
+      text-decoration: none;
+      transition: 0.3s;
+    }
+
+    .links a:hover {
+      background-color: #4CAF50;
+      color: white;
+    }
+
+    p {
+      text-align: center;
+      font-size: 18px;
+      color: #555;
+    }
+
+    .closed {
+      color: red;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="header-container">
+    <h1>All Registered Salons</h1>
+    <div class="search-container">
+      <button id="search-icon"><i class="fas fa-magnifying-glass"></i></button>
+      <form id="search-form" method="get" style="display:inline;">
+        <input type="text" name="search" placeholder="Search by name or address"
+          value="{{ search_query|default('') }}">
+      </form>
+    </div>
+  </div>
+
+  {% if salons %}
+  <table>
+    <tr>
+      <th>Name</th>
+      <th>Address</th>
+      <th>Latitude</th>
+      <th>Longitude</th>
+      <th>Contact</th>
+      <th>Status</th>
+      <th>Book Slot</th>
+      {% if session.get('username') %}<th>Owner Toggle</th>{% endif %}
+      {% if session.get('admin') %}<th>Admin Toggle</th>{% endif %}
+    </tr>
+
+    {% for salon in salons %}
+    <tr class="{% if session.get('username') == salon['owner_username'] %}owner-row{% endif %}">
+      <td>{{ salon['name'] }}</td>
+      <td>{{ salon['address'] }}</td>
+      <td>{{ salon['lat'] }}</td>
+      <td>{{ salon['lng'] }}</td>
+      <td>{{ salon['contact'] }}</td>
+      <td class="{{ 'closed' if salon['status'] == 'OFF' else '' }}">{{ salon['status'] }}</td>
+
+      <!-- Book Slot -->
+      <td>
+        {% if salon['status'] == 'ON' %}
+          <a class="book-btn" href="{{ url_for('book_slot_for_salon', salon_id=salon['id']) }}">Book Slot</a>
+        {% else %}
+          <span class="disabled-link">Closed</span>
+        {% endif %}
+      </td>
+
+      <!-- Owner Toggle -->
+      {% if session.get('username') %}
+      <td>
+        {% if session.get('username') == salon['owner_username'] %}
+          <a class="toggle-btn {% if salon['status'] == 'ON' %}off{% else %}on{% endif %}"
+             href="{{ url_for('owner_toggle_salon_status', salon_id=salon['id']) }}">
+             {% if salon['status'] == 'ON' %} Turn OFF {% else %} Turn ON {% endif %}
+          </a>
+        {% else %}
+          -
+        {% endif %}
+      </td>
+      {% endif %}
+
+      <!-- Admin Toggle -->
+      {% if session.get('admin') %}
+      <td>
+        <a class="toggle-btn {% if salon['status'] == 'ON' %}off{% else %}on{% endif %}"
+           href="{{ url_for('toggle_salon_status', salon_id=salon['id']) }}">
+           {% if salon['status'] == 'ON' %} Turn OFF {% else %} Turn ON {% endif %}
+        </a>
+      </td>
+      {% endif %}
+    </tr>
+    {% endfor %}
+  </table>
+  {% else %}
+  <p>No salons available.</p>
+  {% endif %}
+
+  <div class="links">
+    <a href="{{ url_for('register_salon') }}">Register New Salon</a>
+    <a href="{{ url_for('male') }}">Back to Home</a>
+  </div>
+
+  <script>
+    const searchIcon = document.getElementById('search-icon');
+    const searchInput = document.querySelector('#search-form input[name="search"]');
+    const searchForm = document.getElementById('search-form');
+
+    searchIcon.addEventListener('click', function () {
+      searchInput.classList.toggle('active');
+      if (searchInput.classList.contains('active')) {
+        searchInput.focus();
+      }
+    });
+
+    searchInput.addEventListener('keypress', function (e) {
+      if (e.key === 'Enter') {
+        searchForm.submit();
+      }
+    });
+  </script>
+
+</body>
+</html>
