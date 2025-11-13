@@ -1,6 +1,4 @@
 datetime
 Flask
-
-sqlite3
 gunicorn
 Werkzeug
