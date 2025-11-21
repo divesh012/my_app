@@ -1,0 +1,225 @@
+/* Global Body */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    color: white;
+    background: linear-gradient(135deg, #6a11cb, #aa25fc);
+    position: relative; /* for absolute positioning of logo */
+}
+
+/* ---- GLOORA Logo Styling ---- */
+.logo {
+    position: absolute; /* top-left corner */
+    top: 20px;          /* distance from top */
+    left: 20px;         /* distance from left */
+    font-size: 32px;
+    font-weight: 800;
+    color: #fff;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    letter-spacing: 2px;
+    text-shadow: 2px 2px 6px rgba(0,0,0,0.3);
+    cursor: default;
+}
+
+.logo:hover {
+    color: #f3eff1;
+    border: 1px solid #fff;
+}
+
+/* ---- Navigation Bar Styling ---- */
+.navbar {
+    display: flex;
+    justify-content: center; /* center links horizontally */
+    gap: 40px;
+    padding: 20px 0;
+    margin-top: 80px; /* proper space below logo */
+    font-size: 18px;
+    font-weight: bold;
+    position: relative; /* keep navbar in flow below logo */
+    z-index: 1;
+}
+
+.navbar a {
+    text-decoration: none;
+    color: black;
+    transition: color 0.3s;
+}
+
+.navbar a:hover {
+    color: #f3eff1; /* Pink highlight for active link */
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+/* ---- Card Box ---- */
+.card {
+    max-width: 600px;
+    margin: 30px auto;
+    background: #ffffff;
+    padding: 25px;
+    border-radius: 14px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+    animation: fadeIn 0.4s ease-in-out;
+}
+
+.card p {
+    color: black;
+    font-size: 16px;
+    margin-bottom: 12px;
+}
+
+.card h2 {
+    text-align: center;
+    color: #2e80ff;
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+
+/* ---- Input Fields ---- */
+.card input,
+.card select {
+    width: 100%;
+    padding: 12px;
+    margin-top: 12px;
+    border-radius: 10px;
+    border: 1.4px solid #d6d6d6;
+    outline: none;
+    font-size: 15px;
+    background: #fafafa;
+    transition: 0.25s;
+}
+
+.card input:focus,
+.card select:focus {
+    border-color: #2d8cff;
+    box-shadow: 0px 0px 4px rgba(45, 140, 255, 0.4);
+    background: #ffffff;
+}
+
+/* ---- Buttons ---- */
+.btn-book,
+.btn-show {
+    width: 100%;
+    display: block;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 16px;
+    color: #fff;
+    cursor: pointer;
+    border: none;
+    text-align: center;
+    text-decoration: none;
+    transition: 0.25s;
+    box-sizing: border-box;
+    margin-top: 12px;
+}
+
+.btn-book { background: #0066ff; }
+.btn-book:hover { background: #004fcc; }
+
+.btn-show { background: #00c853; }
+.btn-show:hover { background: #009c41; }
+
+.btn-show:visited,
+.btn-show:active {
+    color: #fff;
+}
+
+/* ---- Image Styling ---- */
+.card img {
+    width: 100%;
+    height: 210px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-bottom: 15px;
+}
+
+/* ---- Animation ---- */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 480px) {
+    .card { padding: 18px; }
+    .btn-book, .btn-show { font-size: 15px; }
+    .navbar { gap: 20px; margin-top: 70px; flex-direction: column; align-items: center; }
+}
+
+/* ---- Footer Styling ---- */
+.footer {
+    background-color: #7a29c0;
+    padding: 40px;
+    color: black;
+    font-size: 14px;
+}
+
+.footer-top {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    max-width: 1200px;
+    margin: auto;
+}
+
+.footer-column {
+    flex: 1 1 180px;
+    margin: 20px;
+}
+
+.footer-column h4 {
+    font-size: 16px;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+}
+
+.footer-column a {
+    display: block;
+    color: white;
+    margin-bottom: 10px;
+    text-decoration: none;
+}
+
+.footer-column a:hover {
+    text-decoration: underline;
+}
+
+.dropdowns {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-top: 20px;
+}
+
+select {
+    padding: 8px;
+    font-size: 14px;
+}
+
+.flag {
+    width: 20px;
+    margin-right: 6px;
+    vertical-align: middle;
+}
+
+.social-icons i {
+    font-size: 18px;
+    margin: 0 8px;
+    cursor: pointer;
+}
+
+.app-links img {
+    height: 40px;
+    margin: 10px 0;
+}
+
+.footer-bottom {
+    text-align: center;
+    font-size: 12px;
+    color: white;
+    margin-top: 30px;
+    border-top: 1px solid #ddd;
+    padding-top: 15px;
+}

@@ -1,0 +1,375 @@
+/* =========================================
+                GLOBAL STYLING
+========================================= */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    color: white;
+    background: linear-gradient(135deg, #6a11cb, #aa25fc);
+}
+
+/* =========================================
+                NAVBAR
+========================================= */
+.navbar {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    padding: 20px 0;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.navbar a {
+    text-decoration: none;
+    color: black;
+    transition: color 0.3s;
+}
+
+.navbar a:hover {
+    color: #f3eff1;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+/* =========================================
+                WRAPPER
+========================================= */
+.wrap {
+    max-width: 1000px;
+    margin: auto;
+    padding: 20px;
+}
+
+.top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+/* =========================================
+                SEARCH BOX
+========================================= */
+.search_box {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.search_box input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+}
+
+.search_box button {
+    padding: 10px 18px;
+    border: none;
+    border-radius: 6px;
+    background: #a409f7;
+    color: #fff;
+    cursor: pointer;
+}
+
+/* =========================================
+                GRID + CARD
+========================================= */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+    gap: 16px;
+}
+
+.card {
+    background: #7905e6;
+    padding: 14px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.07);
+    transition: transform .2s;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+}
+
+img {
+    width: 100%;
+    height: 190px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.no-img {
+    height: 190px;
+    background: #ececec;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    color: black;
+    font-size: 14px;
+}
+
+.muted {
+    color: black;
+    font-size: 14px;
+    margin: 4px 0;
+}
+
+.price {
+    font-weight: bold;
+    color: #222;
+}
+
+.rating {
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+}
+
+/* =========================================
+                BUTTONS
+========================================= */
+.btn {
+    width: 100%;
+    display: block;
+    padding: 12px;
+    border-radius: 8px;
+    border: none;
+    font-size: 15px;
+    font-weight: 600;
+    text-align: center;
+    cursor: pointer;
+    color: #fff;
+    box-sizing: border-box;
+    transition: .25s;
+}
+
+/* Add Salon */
+.add-btn {
+    background: #28a745;
+    text-decoration: none;
+}
+
+.add-btn:hover {
+    background: #1f8838;
+    text-decoration: underline;
+}
+
+/* Book Slot */
+.book-btn {
+    background: red;
+    width: 100%;
+    margin-top: auto;
+    margin-bottom: 8px;   /* << ADDED SPACING FIX */
+    text-decoration: none;
+}
+
+.book-btn:hover {
+    background: #c10020;
+    text-decoration: underline;
+}
+
+/* Rating Form */
+.rating-form {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    gap: 6px;
+}
+
+.rate-select {
+    padding: 5px;
+    border-radius: 6px;
+    border: 1px solid #aaa;
+    font-size: 14px;
+}
+
+.rate-btn {
+    padding: 6px 12px;
+    border: none;
+    background: #ff9800;
+    color: white;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: .2s;
+}
+
+.rate-btn:hover {
+    background: #e08600;
+}
+
+/* =========================================
+                FOOTER
+========================================= */
+.footer {
+    width: 100%;
+    background-color: #7a29c0;
+    padding: 40px 0;
+    color: white;
+    margin-top: 40px;
+}
+
+.footer-top {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    max-width: 1300px;
+    margin: auto;
+    padding: 0 40px;
+}
+
+.footer-column {
+    flex: 1 1 220px;
+    margin: 20px;
+    min-width: 200px;
+}
+
+.footer-column h4 {
+    font-size: 16px;
+    color: black;
+    margin-bottom: 15px;
+}
+
+.footer-column a {
+    display: block;
+    color: white;
+    margin-bottom: 10px;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.footer-column a:hover {
+    text-decoration: underline;
+}
+
+.dropdowns {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 15px;
+}
+
+select {
+    padding: 8px;
+    font-size: 14px;
+    border-radius: 6px;
+}
+
+.social-icons i {
+    font-size: 20px;
+    margin: 0 8px 10px 0;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.social-icons i:hover {
+    transform: scale(1.2);
+}
+
+.app-links img {
+    height: 40px;
+    margin: 10px 0;
+}
+
+.footer-bottom {
+    text-align: center;
+    font-size: 12px;
+    color: white;
+    padding: 15px 0;
+    margin-top: 20px;
+    border-top: 1px solid rgba(255,255,255,0.3);
+    width: 100%;
+}
+
+/* Mobile Footer Responsive */
+@media (max-width: 768px) {
+    .footer-top {
+        padding: 0 20px;
+    }
+    .footer-column {
+        flex: 1 1 100%;
+        margin: 10px 0;
+    }
+}
+
+/* =========================================
+            OWNER: TOGGLE BUTTON
+========================================= */
+.toggle-btn {
+    background: #ff9800;
+    color: white;
+    font-weight: 700;
+    padding: 12px;
+    border-radius: 8px;
+    width: 100%;
+    border: none;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.toggle-btn:hover {
+    background: #e08600;
+}
+
+/* =========================================
+            PASS KEY POPUP CSS
+========================================= */
+#passKeyModal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.6);
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+#passKeyForm {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    width: 300px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    animation: popupFade .3s ease;
+}
+
+#passKeyForm h3 {
+    color: black;
+}
+
+#passKeyForm input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    margin: 12px 0;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+#passKeyForm button {
+    width: 100%;
+    padding: 10px;
+    border-radius: 6px;
+}
+
+.btn.btn-primary {
+    background-color: #6a11cb;
+    border: none;
+}
+
+/* Popup Animation */
+@keyframes popupFade {
+    from { opacity: 0; transform: scale(0.8); }
+    to { opacity: 1; transform: scale(1); }
+}

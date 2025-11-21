@@ -1,0 +1,215 @@
+/* ---- Global Styling ---- */
+body {
+    font-family: "Segoe UI", Arial, sans-serif;
+    background-color: #8925e1;
+    padding: 25px;
+    margin: 0;
+}
+
+/* ---- Form Card ---- */
+.card {
+    max-width: 750px;
+    margin: 25px auto;
+    background: #7c0fdc;
+    padding: 30px;
+    border-radius: 14px;
+    box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.08);
+    animation: fadeIn 0.4s ease-out;
+}
+
+.card h2 {
+    margin: 0 0 18px 0;
+    font-weight: 700;
+    color: #0e0e0e;
+    text-align: center;
+    font-size: 26px;
+}
+
+/* ---- Labels ---- */
+label {
+    font-weight: 600;
+    margin-top: 14px;
+    display: block;
+    color: white;
+}
+
+/* ---- Inputs, Select & Textarea ---- */
+input,
+textarea,
+select {
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1.4px solid #cfd8e3;
+    background: #fafafa;
+    margin-top: 6px;
+    font-size: 15px;
+    outline: none;
+    transition: 0.25s;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+    border-color: #721ff6;
+    background: #fff;
+    box-shadow: 0px 0px 5px rgba(164, 45, 255, 0.45);
+}
+
+/* ---- Two Column Grid ---- */
+
+.row {
+    display: grid;
+    grid-template-columns: 1fr; /* one column, so City & State stacked */
+    gap: 12px; /* space between rows */
+}
+
+/* ---- Mobile Fix ---- */
+@media (max-width: 500px) {
+    .row {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+}
+
+
+
+/* ---- City + State Row (no gap) ---- */
+.state{
+    display: grid;
+    grid-template-columns: 2fr 1fr; /* city wider, state smaller */
+    gap: 20px; /* no gap */
+}
+
+.city-state input,
+.city-state select {
+    border-radius: 10px;
+}
+
+/* Add small margin between city and state if needed */
+.city-state select {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    margin-left: -1px; /* slight overlap to connect borders */
+}
+
+/* ---- Buttons ---- */
+.button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    margin-top: 25px; /* space above buttons */
+    flex-wrap: wrap;
+}
+
+/* Ensure both buttons have same width */
+.btn, .btn-show {
+    display: inline-block;
+    padding: 12px 25px;
+    font-size: 16px;
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: 8px;
+    text-align: center;
+    min-width: 180px;
+    cursor: pointer;
+    border: none;
+}
+
+/* Register Salon Button Style */
+.btn {
+    background-color: #28a745;
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.btn:hover {
+    background-color: #218838;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+}
+
+.btn:active {
+    transform: translateY(0);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+/* Show Salon Button Style */
+.btn-show {
+    background-color: #ca3035;
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.btn-show:hover {
+    background-color: #b30000;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+}
+
+.btn-show:active {
+    transform: translateY(0);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+/* ---- Flash Messages ---- */
+.msg {
+    padding: 12px;
+    border-radius: 10px;
+    margin-bottom: 14px;
+    font-weight: 500;
+}
+
+.error {
+    background: #ffe0e0;
+    color: #b30000;
+}
+
+.success {
+    background: #e1ffe8;
+    color: #056226;
+}
+
+/* ---- Animation ---- */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ---- Responsive for Mobile ---- */
+@media (max-width: 500px) {
+    .row {
+        grid-template-columns: 1fr;
+    }
+
+    .city-state {
+        grid-template-columns: 1fr;
+    }
+
+    .card {
+        padding: 20px;
+    }
+
+    input,
+    textarea,
+    select {
+        font-size: 14px;
+    }
+
+    .button-container {
+        flex-direction: column;
+        gap: 12px;
+    }
+}
+
+/* ---- Image Field Margin ---- */
+.upload-field {
+    margin-top: 12px; /* space between image upload and buttons */
+}
