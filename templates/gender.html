@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Gloora - Select Gender</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/gender.css') }}">
+</head>
+
+<body>
+
+    <!-- Navigation Bar -->
+    <div class="navbar" style="text-align:center; margin: 20px;">
+        <a href="{{ url_for('gender') }}">Home</a>
+        <a href="{{ url_for('about') }}" class="active">About</a>
+        <a href="{{ url_for('services_categories') }}">Services & Categories</a>
+        <!-- <a href="{{ url_for('contact_us') }}">Contact Us</a> -->
+        <a href="{{ url_for('help_page') }}">Contact Us</a>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="overlay">
+            <h1><strong>Gloora</strong></h1>
+            <h2>India’s #1<br>beauty_concept app</h2>
+            <p>Experience fast & easy online ordering<br>on the Gloora app</p>
+
+            <div class="app-buttons">
+                <a href="#"><img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" alt="Get it on Google Play"></a>
+                <a href="#"><img src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg" alt="Download on App Store"></a>
+            </div>
+
+            <!-- Scroll Button -->
+            <div class="scroll-down" id="scrollBtn">Scroll down ↓</div>
+        </div>
+    </section>
+
+    <!-- Gender Selection Section -->
+    <section class="gender-selection">
+        <h1>Select Your Gender</h1>
+        <div class="gender-buttons">
+            <a href="{{ url_for('male') }}"><button class="gender-btn">Male</button></a>
+            <a href="{{ url_for('female') }}"><button class="gender-btn">Female</button></a>
+        </div>
+        <p>Admin login: email <b>admin@gmail.com</b>, password <b>admin123</b></p>
+    </section>
+
+    <!-- Location Section -->
+    <section class="locations">
+        <h2>Popular locations in <img src="{{ url_for('static', filename='images/OIP.jpeg') }}" alt="Flag" class="flag"> India</h2>
+        <p class="description">
+            From luxurious salons to the coziest beauty parlors, Gloora helps you discover the best grooming experiences across India.
+            Explore top-rated services, real user reviews, and stunning transformations to find your perfect salon.
+        </p>
+
+        <div class="grid">
+            <a href="#">Agra Salons</a><a href="#">Ahmedabad Salons</a><a href="#">Ajmer Salons</a><a href="#">Alappuzha Salons</a><a href="#">Allahabad Salons</a>
+            <a href="#">Amravati Salons</a><a href="#">Amritsar Salons</a><a href="#">Aurangabad Salons</a><a href="#">Bengaluru Salons</a><a href="#">Bhopal Salons</a>
+            <a href="#">Bhubaneswar Salons</a><a href="#">Chandigarh Salons</a><a href="#">Chennai Salons</a><a href="#">Delhi Salons</a><a href="#">Goa Salons</a>
+            <a href="#">Guwahati Salons</a><a href="#">Hyderabad Salons</a><a href="#">Jaipur Salons</a><a href="#">Kochi Salons</a><a href="#">Kolkata Salons</a>
+            <a href="#">Lucknow Salons</a><a href="#">Mumbai Salons</a><a href="#">Nagpur Salons</a><a href="#">Pune Salons</a><a href="#">Surat Salons</a>
+            <a href="#">Thiruvananthapuram Salons</a><a href="#">Varanasi Salons</a><a href="#">Visakhapatnam Salons</a>
+        </div>
+    </section>
+
+    <!-- Footer Section -->
+    <div class="footer" id="footer">
+        <div class="footer-top">
+
+            <div class="footer-column">
+                <h4>About SalonFinder</h4>
+                <a href="#">Who We Are</a>
+                <a href="#">Blog</a>
+                <a href="#">Work With Us</a>
+                <a href="#">Report Issue</a>
+                <a href="{{ url_for('contact_us') }}">Contact Us</a>
+            </div>
+
+            <div class="footer-column">
+                <h4>SalonVerse</h4>
+                <a href="#">SalonFinder</a>
+                <a href="#">BeautyVerse</a>
+                <a href="#">HairCare Hub</a>
+                <a href="#">GlowUp</a>
+            </div>
+
+            <div class="footer-column">
+                <h4>Learn More</h4>
+                <a href="{{ url_for('cancellation') }}">Cancellation & Refund Policy</a>
+                <a href="{{ url_for('privacy') }}">Privacy Policy</a>
+                <a href="{{ url_for('term') }}">Terms & Conditions</a>
+            </div>
+
+            <div class="footer-column">
+                <h4>Social Links</h4>
+                <div class="social-icons">
+                    <i class="fab fa-linkedin"></i>
+                    <i class="fab fa-instagram"></i>
+                    <i class="fab fa-x-twitter"></i>
+                    <i class="fab fa-youtube"></i>
+                    <i class="fab fa-facebook"></i>
+                </div>
+
+                <div class="app-links">
+                    <img src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg" alt="App Store">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" alt="Play Store">
+                </div>
+            </div>
+
+            <div class="footer-column">
+                <div class="dropdowns">
+                    <select>
+                        <option selected>🇮🇳 India</option>
+                        <option>🇺🇸 United States</option>
+                        <option>🇬🇧 United Kingdom</option>
+                        <option>🇩🇪 Germany</option>
+                        <option>🇫🇷 France</option>
+                        <option>🇯🇵 Japan</option>
+                        <option>🇨🇦 Canada</option>
+                        <option>🇦🇺 Australia</option>
+                    </select>
+
+                    <select>
+                        <option selected>English</option>
+                        <option>Deutsch</option>
+                        <option>Français</option>
+                        <option>日本語</option>
+                        <option>Español</option>
+                        <option>हिन्दी</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            © 2025 Gloora™ Ltd. All rights reserved. By continuing, you agree to our Terms, Privacy Policy, and Cookie Policy.
+        </div>
+    </div>
+
+<script src="{{ url_for('static', filename='javascript/gender.js') }}"></script>
+</body>
+</html>

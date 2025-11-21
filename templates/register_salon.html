@@ -1,0 +1,63 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Register Salon</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/register_salon.css') }}">
+</head>
+<body>
+<div class="card">
+  <h2>Register Your Salon</h2>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for cat, m in messages %}
+        <div class="msg {{ 'error' if cat=='error' else 'success' }}">{{ m }}</div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  <form action="{{ url_for('register_salon') }}" method="post" enctype="multipart/form-data">
+    <label>Salon Name *</label>
+    <input type="text" name="name" value="{{ form.name if form else '' }}" required>
+
+    <label>Address (street)</label>
+    <textarea name="address">{{ form.address if form else '' }}</textarea>
+
+    <div class="row">
+  <div>
+    <label>City *</label>
+    <input type="text" name="city" value="{{ form.city if form else '' }}" required>
+  </div>
+  <div>
+    <label>State *</label>
+    <input type="text" name="state" value="{{ form.state if form else '' }}" required>
+  </div>
+</div>
+
+
+<label>Contact Number *</label>
+<input type="text" name="contact" value="{{ form.contact if form else '' }}" required pattern="\d+" title="Please enter numbers only">
+
+
+    <label>Average Price (optional)</label>
+    <input type="text" name="price" value="{{ form.price if form else '' }}">
+
+    <label>Services (comma separated, optional)</label>
+    <input type="text" name="services" value="{{ form.services if form else '' }}">
+
+    <label>Pass Key (used for owner actions) *</label>
+    <input type="password" name="pass_key" required>
+
+    <label>Salon Image (one) - png/jpg/jpeg/gif</label>
+    <input class="upload-field" type="file" name="image" accept="image/*">
+
+    <div class="button-container">
+      <button class="btn" type="submit">Register Salon</button>
+      <a class="btn-show" href="{{ url_for('show_salons') }}">Show Salon</a>
+    </div>
+  </form>
+</div>
+</body>
+</html>

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Payment</title>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <style>
+        /* Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .payment-container {
+            background: #fff;
+            padding: 2rem 2.5rem;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+            width: 420px;
+            max-width: 95%;
+            text-align: center;
+            animation: fadeIn 0.6s ease-in-out;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            color: #333;
+            margin-bottom: 1rem;
+        }
+
+        p {
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+            color: #555;
+            font-weight: 500;
+        }
+
+        ul {
+            list-style: none;
+            margin: 1rem 0;
+            padding: 0;
+            text-align: left;
+        }
+
+        ul li {
+            background: #f0f4f8;
+            padding: 0.7rem 1rem;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: #e11010;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        ul li::before {
+            content: "⏱️";
+            font-size: 1rem;
+        }
+
+        #pay-button {
+            background: #3399cc;
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            padding: 0.8rem 1.6rem;
+            font-size: 1.05rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+            box-shadow: 0 4px 10px rgba(51, 153, 204, 0.3);
+        }
+
+        #pay-button:hover {
+            background: #267ba8;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(51, 153, 204, 0.45);
+        }
+
+        #pay-button:active {
+            transform: translateY(1px);
+            box-shadow: 0 3px 7px rgba(51, 153, 204, 0.25);
+        }
+
+        /* Animation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <div class="payment-container">
+        <h2>Hello {{ username }}, please confirm your booking</h2>
+
+        <p>Selected Slots:</p>
+        <ul>
+            {% for slot in slots %}
+                <li>{{ slot.start_time }} → {{ slot.end_time }}</li>
+            {% endfor %}
+        </ul>
+
+        <button id="pay-button">Pay Now</button>
+    </div>
+
+    <script>
+        var options = {
+            "key": "{{ razorpay_key }}",
+            "amount": "{{ razorpay_order.amount }}",
+            "currency": "{{ razorpay_order.currency }}",
+            "name": "Gloora Salon Booking",
+            "description": "Confirm your slot booking",
+            "order_id": "{{ razorpay_order.id }}",
+            "handler": function (response){
+                var form = document.createElement('form');
+                form.method = 'POST';
+                form.action = "/payment-success";
+                form.innerHTML = `
+                    <input type="hidden" name="razorpay_payment_id" value="${response.razorpay_payment_id}">
+                    <input type="hidden" name="razorpay_order_id" value="${response.razorpay_order_id}">
+                    <input type="hidden" name="razorpay_signature" value="${response.razorpay_signature}">
+                `;
+                document.body.appendChild(form);
+                form.submit();
+            },
+            "theme": {
+                "color": "#3399cc"
+            }
+        };
+
+        var rzp1 = new Razorpay(options);
+        document.getElementById('pay-button').onclick = function(e){
+            rzp1.open();
+            e.preventDefault();
+        }
+    </script>
+</body>
+</html>

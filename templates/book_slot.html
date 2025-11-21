@@ -1,0 +1,121 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <title>Book Slot - {{ salon.name }}</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/book_slot.css') }}">
+</head>
+<body>
+  <h1 class="logo">GLOORA</h1>
+
+  <!-- Navigation Bar -->
+    <div class="navbar" style="text-align:center; margin: 20px;">
+        <a href="{{ url_for('gender') }}">Home</a>
+        <a href="{{ url_for('about') }}" class="active">About</a>
+        <a href="{{ url_for('services_categories') }}">Services & Categories</a>
+        <!-- <a href="{{ url_for('contact_us') }}">Contact Us</a> -->
+        <a href="{{ url_for('help_page') }}">Contact Us</a>
+    </div>
+  <div class="card">
+    <h2>Book Slot for {{ salon.name }}</h2>
+
+    {% if salon.image_path %}
+      {% set img = salon.image_path.split('/')[-1] %}
+      <img src="{{ url_for('uploaded_file', filename=img) }}" alt="{{ salon.name }}" style="width:100%;height:200px;object-fit:cover;border-radius:6px">
+    {% endif %}
+
+    <p>📍 {{ salon.address }}</p>
+    <p>📞 {{ salon.contact }}</p>
+
+    <form method="post" style="margin-bottom:12px;">
+      <label>Your name</label>
+      <input type="text" name="customer_name" required>
+
+      <label>Choose slot (example: 2025-12-01 11:00)</label>
+      <input type="datetime-local" name="date" required>
+<button class="btn-book" type="submit">Book Slot</button>
+</form>
+
+<a class="btn-show" href="{{ url_for('show_salons') }}">Show Salon</a>
+
+  </div>
+
+  
+    <!-- Footer Section -->
+    <div class="footer" id="footer">
+        <div class="footer-top">
+
+            <div class="footer-column">
+                <h4>About SalonFinder</h4>
+                <a href="#">Who We Are</a>
+                <a href="#">Blog</a>
+                <a href="#">Work With Us</a>
+                <a href="#">Report Issue</a>
+                <a href="{{ url_for('contact_us') }}">Contact Us</a>
+            </div>
+
+            <div class="footer-column">
+                <h4>SalonVerse</h4>
+                <a href="#">SalonFinder</a>
+                <a href="#">BeautyVerse</a>
+                <a href="#">HairCare Hub</a>
+                <a href="#">GlowUp</a>
+            </div>
+
+            <div class="footer-column">
+                <h4>Learn More</h4>
+                <a href="{{ url_for('cancellation') }}">Cancellation & Refund Policy</a>
+                <a href="{{ url_for('privacy') }}">Privacy Policy</a>
+                <a href="{{ url_for('term') }}">Terms & Conditions</a>
+            </div>
+
+            <div class="footer-column">
+                <h4>Social Links</h4>
+                <div class="social-icons">
+                    <i class="fab fa-linkedin"></i>
+                    <i class="fab fa-instagram"></i>
+                    <i class="fab fa-x-twitter"></i>
+                    <i class="fab fa-youtube"></i>
+                    <i class="fab fa-facebook"></i>
+                </div>
+
+                <div class="app-links">
+                    <img src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg" alt="App Store">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" alt="Play Store">
+                </div>
+            </div>
+
+            <div class="footer-column">
+                <div class="dropdowns">
+                    <select>
+                        <option selected>🇮🇳 India</option>
+                        <option>🇺🇸 United States</option>
+                        <option>🇬🇧 United Kingdom</option>
+                        <option>🇩🇪 Germany</option>
+                        <option>🇫🇷 France</option>
+                        <option>🇯🇵 Japan</option>
+                        <option>🇨🇦 Canada</option>
+                        <option>🇦🇺 Australia</option>
+                    </select>
+
+                    <select>
+                        <option selected>English</option>
+                        <option>Deutsch</option>
+                        <option>Français</option>
+                        <option>日本語</option>
+                        <option>Español</option>
+                        <option>हिन्दी</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            © 2025 Gloora™. All rights reserved. Use of this platform constitutes acceptance of our Terms, Privacy Policy, and Cookie Policy.
+        </div>
+    </div>
+
+</body>
+</html>

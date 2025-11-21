@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Find Nearest Salons</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <script>
+    function findSalons() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+          let lat = position.coords.latitude;
+          let lng = position.coords.longitude;
+
+          fetch("/nearest-salons", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: "lat=" + lat + "&lng=" + lng
+          })
+          .then(response => response.json())
+          .then(data => {
+            let output = "<h3>Nearest Salons</h3><ul>";
+            data.forEach(salon => {
+              output += `<li><b>${salon.name}</b> (${salon.distance_km} km)<br>${salon.address}</li>`;
+            });
+            output += "</ul>";
+            document.getElementById("salons-list").innerHTML = output;
+          });
+        });
+      } else {
+        alert("Geolocation is not supported by this browser.");
+      }
+    }
+  </script>
+</head>
+<body>
+  <h1>Welcome to Gloora</h1>
+  <button onclick="findSalons()">Find Nearest Salons</button>
+  <div id="salons-list"></div>
+
+  <p><a href="{{ url_for('register_salon') }}">Register a Salon</a></p>
+</body>
+</html>
