@@ -1,270 +1,231 @@
-<!DOCTYPE html>
-<html lang="en">
-
+<!doctype html>
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>All Salons</title>
+  <meta charset="utf-8"/>
+  <title>Salons</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <style>
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #f4f4f9;
-      margin: 0;
-      padding: 0;
-    }
-
-    .header-container {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      max-width: 90%;
-      margin: 20px auto;
-    }
-
-    h1 {
-      color: #333;
-      margin: 0;
-    }
-
-    .search-container input[type="text"] {
-      display: none;
-      padding: 6px 10px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      width: 0;
-      transition: width 0.3s ease;
-    }
-
-    .search-container input[type="text"].active {
-      display: inline-block;
-      width: 220px;
-    }
-
-    .search-container button {
-      background: none;
-      border: none;
-      cursor: pointer;
-      font-size: 20px;
-      color: #4CAF50;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin: 20px auto;
-      background: white;
-      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-      border-radius: 10px;
-      overflow: hidden;
-    }
-
-    table th,
-    table td {
-      text-align: center;
-      vertical-align: middle;
-      padding: 10px;
-      white-space: nowrap;
-    }
-
-    th {
-      background-color: #4CAF50;
-      color: white;
-    }
-
-    tr.owner-row {
-      background-color: #fff9c4;
-    }
-
-    tr:hover {
-      background-color: #f1f1f1;
-    }
-
-    /* Toggle buttons */
-    a.toggle-btn {
-      padding: 8px 14px;
-      border-radius: 6px;
-      color: white !important;
-      font-weight: bold;
-      text-decoration: none;
-      transition: 0.3s;
-      display: inline-block;
-    }
-
-    a.toggle-btn.on {
-      background-color: #4CAF50;
-    }
-
-    a.toggle-btn.on:hover {
-      background-color: #45a049;
-    }
-
-    a.toggle-btn.off {
-      background-color: #f44336;
-    }
-
-    a.toggle-btn.off:hover {
-      background-color: #e53935;
-    }
-
-    /* Book Slot button */
-    td a.book-btn {
-      padding: 6px 12px;
-      border-radius: 5px;
-      border: 1px solid #4CAF50;
-      color: #4CAF50;
-      font-weight: bold;
-      text-decoration: none;
-      transition: 0.3s;
-    }
-
-    td a.book-btn:hover {
-      background-color: #45a049;
-      color: white;
-    }
-
-    /* Disabled link */
-    .disabled-link {
-      color: gray;
-      border: 1px solid gray;
-      padding: 6px 12px;
-      border-radius: 5px;
-      pointer-events: none;
-      cursor: default;
-      display: inline-block;
-    }
-
-    .links {
-      text-align: center;
-      margin: 25px 0;
-    }
-
-    .links a {
-      margin: 0 10px;
-      padding: 10px 16px;
-      border-radius: 5px;
-      border: 1px solid #4CAF50;
-      color: #4CAF50;
-      font-weight: bold;
-      text-decoration: none;
-      transition: 0.3s;
-    }
-
-    .links a:hover {
-      background-color: #4CAF50;
-      color: white;
-    }
-
-    p {
-      text-align: center;
-      font-size: 18px;
-      color: #555;
-    }
-
-    .closed {
-      color: red;
-      font-weight: bold;
-    }
-  </style>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/show_salon.css') }}">
 </head>
 
 <body>
+<div class="wrap">
 
-  <div class="header-container">
-    <h1>All Registered Salons</h1>
-    <div class="search-container">
-      <button id="search-icon"><i class="fas fa-magnifying-glass"></i></button>
-      <form id="search-form" method="get" style="display:inline;">
-        <input type="text" name="search" placeholder="Search by name or address"
-          value="{{ search_query|default('') }}">
-      </form>
+  <div class="top">
+    <h2>Registered Salons</h2>
+    <div>
+      <a class="btn add-btn" href="{{ url_for('register_salon') }}">+ Add New Salon</a>
     </div>
   </div>
 
-  {% if salons %}
-  <table>
-    <tr>
-      <th>Name</th>
-      <th>Address</th>
-      <th>Latitude</th>
-      <th>Longitude</th>
-      <th>Contact</th>
-      <th>Status</th>
-      <th>Book Slot</th>
-      {% if session.get('username') %}<th>Owner Toggle</th>{% endif %}
-      {% if session.get('admin') %}<th>Admin Toggle</th>{% endif %}
-    </tr>
-
-    {% for salon in salons %}
-    <tr class="{% if session.get('username') == salon['owner_username'] %}owner-row{% endif %}">
-      <td>{{ salon['name'] }}</td>
-      <td>{{ salon['address'] }}</td>
-      <td>{{ salon['lat'] }}</td>
-      <td>{{ salon['lng'] }}</td>
-      <td>{{ salon['contact'] }}</td>
-      <td class="{{ 'closed' if salon['status'] == 'OFF' else '' }}">{{ salon['status'] }}</td>
-
-      <!-- Book Slot -->
-      <td>
-        {% if salon['status'] == 'ON' %}
-          <a class="book-btn" href="{{ url_for('book_slot_for_salon', salon_id=salon['id']) }}">Book Slot</a>
-        {% else %}
-          <span class="disabled-link">Closed</span>
-        {% endif %}
-      </td>
-
-      <!-- Owner Toggle -->
-      {% if session.get('username') %}
-      <td>
-        {% if session.get('username') == salon['owner_username'] %}
-          <a class="toggle-btn {% if salon['status'] == 'ON' %}off{% else %}on{% endif %}"
-             href="{{ url_for('owner_toggle_salon_status', salon_id=salon['id']) }}">
-             {% if salon['status'] == 'ON' %} Turn OFF {% else %} Turn ON {% endif %}
-          </a>
-        {% else %}
-          -
-        {% endif %}
-      </td>
-      {% endif %}
-
-      <!-- Admin Toggle -->
-      {% if session.get('admin') %}
-      <td>
-        <a class="toggle-btn {% if salon['status'] == 'ON' %}off{% else %}on{% endif %}"
-           href="{{ url_for('toggle_salon_status', salon_id=salon['id']) }}">
-           {% if salon['status'] == 'ON' %} Turn OFF {% else %} Turn ON {% endif %}
-        </a>
-      </td>
-      {% endif %}
-    </tr>
-    {% endfor %}
-  </table>
-  {% else %}
-  <p>No salons available.</p>
-  {% endif %}
-
-  <div class="links">
-    <a href="{{ url_for('register_salon') }}">Register New Salon</a>
-    <a href="{{ url_for('male') }}">Back to Home</a>
+  <!-- Navigation Bar -->
+  <div class="navbar" style="text-align:center; margin: 20px;">
+      <a href="{{ url_for('gender') }}">Home</a>
+      <a href="{{ url_for('about') }}" class="active">About</a>
+      <a href="{{ url_for('services_categories') }}">Services & Categories</a>
+      <a href="{{ url_for('help_page') }}">Contact Us</a>
   </div>
 
-  <script>
-    const searchIcon = document.getElementById('search-icon');
-    const searchInput = document.querySelector('#search-form input[name="search"]');
-    const searchForm = document.getElementById('search-form');
+  <!-- SEARCH BOX -->
+  <form class="search_box" method="get" action="{{ url_for('show_salons') }}">
+    <input type="search" name="search" placeholder="Search by name or address" value="{{ search_query or '' }}">
+    <button type="submit">Search</button>
+  </form>
 
-    searchIcon.addEventListener('click', function () {
-      searchInput.classList.toggle('active');
-      if (searchInput.classList.contains('active')) {
-        searchInput.focus();
-      }
-    });
+  <!-- GRID START -->
+  <div class="grid">
 
-    searchInput.addEventListener('keypress', function (e) {
-      if (e.key === 'Enter') {
-        searchForm.submit();
-      }
-    });
-  </script>
+    {% for salon in salons %}
+    <div class="card">
+
+        {% if salon.image_path %}
+            <img src="{{ url_for('static', filename=salon.image_path) }}" alt="{{ salon.name }}">
+        {% else %}
+            <div class="no-img">No Image</div>
+        {% endif %}
+
+        <h3>{{ salon.name }}</h3>
+        <p class="muted">📍 {{ salon.address }}</p>
+        <p class="muted">📞 {{ salon.contact }}</p>
+
+        {% if salon.price %}
+          <p class="price">💰 {{ salon.price }}</p>
+        {% endif %}
+
+        <p class="rating">
+          ⭐ Rating:
+          {% if salon.rating_count > 0 %}
+            {{ (salon.rating_total / salon.rating_count) | round(1) }} / 5
+          {% else %}
+            0 / 5
+          {% endif %}
+        </p>
+
+        <!-- Rating Form -->
+        <form action="{{ url_for('rate_salon', salon_id=salon.id) }}" method="POST" class="rating-form">
+          <label for="rating-{{ salon.id }}">Rate this salon:</label>
+          <select name="rating" id="rating-{{ salon.id }}" required>
+            <option value="">--Select--</option>
+            <option value="1">⭐ 1</option>
+            <option value="2">⭐ 2</option>
+            <option value="3">⭐ 3</option>
+            <option value="4">⭐ 4</option>
+            <option value="5">⭐ 5</option>
+          </select>
+          <button type="submit" class="rate-btn">Submit</button>
+        </form>
+
+        <!-- Salon Status -->
+        <p>
+          {% if salon.status == 'ON' %}
+              <span style="color: lightgreen; font-weight:600;">🟢 Salon is OPEN</span>
+          {% else %}
+              <span style="color: red; font-weight:600;">🔴 Salon is CLOSED</span>
+          {% endif %}
+        </p>
+
+        <!-- BOOK SLOT -->
+        {% if salon.status == 'ON' %}
+            <a class="btn book-btn" href="{{ url_for('book_slot_for_salon', salon_id=salon.id) }}">Book Slot</a>
+        {% else %}
+            <button class="btn book-btn" style="background: rgba(58, 241, 2, 0.856);" disabled>Salon Closed</button>
+        {% endif %}
+
+        <!-- OWNER: TOGGLE -->
+        {% if username == salon.owner_username %}
+            <button onclick="openPassKeyPopup({{ salon.id }})"
+        class="toggle-btn">
+    Toggle ON / OFF
+</button>
+
+        {% endif %}
+
+    </div>
+    {% else %}
+      <p>No salons found.</p>
+    {% endfor %}
+
+  </div> <!-- GRID END -->
+
+</div> <!-- WRAP END -->
+
+
+<!-- PASSKEY POPUP -->
+<div id="passKeyModal">
+    <form id="passKeyForm" method="POST">
+        <h3 style="margin-bottom: 10px; text-align:center;">Enter Pass Key</h3>
+
+        <input type="password" 
+               name="pass_key" 
+               placeholder="Pass Key" 
+               required>
+
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
+
+
+<script>
+  //used for location also 
+navigator.geolocation.getCurrentPosition(pos => {
+    const lat = pos.coords.latitude;
+    const lon = pos.coords.longitude;
+    window.location = `/recommend?lat=${lat}&lon=${lon}&category=hair`;
+});
+
+
+
+
+
+function openPassKeyPopup(salon_id) {
+    const modal = document.getElementById("passKeyModal");
+    const form = document.getElementById("passKeyForm");
+    form.action = "/toggle_salon/" + salon_id;
+    modal.style.display = "flex";
+}
+
+window.onclick = function(event) {
+    const modal = document.getElementById("passKeyModal");
+    if (event.target === modal) {
+        modal.style.display = "none";
+    }
+}
+</script>
+
+
+<!-- FOOTER OUTSIDE WRAP (FULL WIDTH) -->
+<div class="footer" id="footer">
+    <div class="footer-top">
+
+        <div class="footer-column">
+            <h4>About SalonFinder</h4>
+            <a href="#">Who We Are</a>
+            <a href="#">Blog</a>
+            <a href="#">Work With Us</a>
+            <a href="#">Report Issue</a>
+            <a href="{{ url_for('contact_us') }}">Contact Us</a>
+        </div>
+
+        <div class="footer-column">
+            <h4>SalonVerse</h4>
+            <a href="#">SalonFinder</a>
+            <a href="#">BeautyVerse</a>
+            <a href="#">HairCare Hub</a>
+            <a href="#">GlowUp</a>
+        </div>
+
+        <div class="footer-column">
+            <h4>Learn More</h4>
+            <a href="{{ url_for('cancellation') }}">Cancellation & Refund Policy</a>
+            <a href="{{ url_for('privacy') }}">Privacy Policy</a>
+            <a href="{{ url_for('term') }}">Terms & Conditions</a>
+        </div>
+
+        <div class="footer-column">
+            <h4>Social Links</h4>
+            <div class="social-icons">
+                <i class="fab fa-linkedin"></i>
+                <i class="fab fa-instagram"></i>
+                <i class="fab fa-x-twitter"></i>
+                <i class="fab fa-youtube"></i>
+                <i class="fab fa-facebook"></i>
+            </div>
+
+            <div class="app-links">
+                <img src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg" alt="App Store">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" alt="Play Store">
+            </div>
+        </div>
+
+        <div class="footer-column">
+            <div class="dropdowns">
+                <select>
+                    <option selected>🇮🇳 India</option>
+                    <option>🇺🇸 United States</option>
+                    <option>🇬🇧 United Kingdom</option>
+                    <option>🇩🇪 Germany</option>
+                    <option>🇫🇷 France</option>
+                    <option>🇯🇵 Japan</option>
+                    <option>🇨🇦 Canada</option>
+                    <option>🇦🇺 Australia</option>
+                </select>
+
+                <select>
+                    <option selected>English</option>
+                    <option>Deutsch</option>
+                    <option>Français</option>
+                    <option>日本語</option>
+                    <option>Español</option>
+                    <option>हिन्दी</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer-bottom">
+        © 2025 Gloora™. All rights reserved. Use of this platform constitutes acceptance of our Terms, Privacy Policy, and Cookie Policy.
+    </div>
+</div>
 
 </body>
 </html>
