@@ -1,0 +1,284 @@
+
+/* Body & Background */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    color: white;
+    background: linear-gradient(135deg, #6a11cb, #aa25fc);
+}
+
+/* Navigation Bar Styling */
+.navbar {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    padding: 20px 0;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.navbar a {
+    text-decoration: none;
+    color: black;
+    transition: color 0.3s;
+}
+
+.navbar a:hover {
+    color: #f3eff1;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+
+/* Hero Section */
+.hero {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    position: relative;
+}
+
+.hero .overlay {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.hero .overlay h1 {
+    font-size: 4rem;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.4);
+    margin-bottom: 15px;
+}
+
+.hero .overlay h2 {
+    font-size: 2rem;
+    margin: 8px 0;
+}
+
+.hero .overlay p {
+    font-size: 1.2rem;
+    margin-bottom: 60px;
+}
+
+.app-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.app-buttons img {
+    height: 60px;
+    transition: transform 0.3s ease;
+    cursor: pointer;
+}
+
+.app-buttons img:hover {
+    transform: scale(1.1);
+}
+
+/* Fixed Scroll Down Arrow */
+.scroll-down {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #fff;
+    font-size: 18px;
+    animation: bounce 2s infinite;
+    z-index: 1000;
+}
+
+#scrollBtn {
+    transition: opacity 0.4s ease-in-out;
+}
+
+
+@keyframes bounce {
+    0%, 100% { transform: translate(-50%, 0); }
+    50% { transform: translate(-50%, 10px); }
+}
+
+/* Gender Selection Section */
+.gender-selection {
+    padding: 80px 20px;
+    text-align: center;
+}
+
+.gender-selection h1 {
+    margin-bottom: 40px;
+    font-size: 2.5rem;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+.gender-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+}
+
+.gender-btn {
+    padding: 15px 40px;
+    font-size: 18px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    color: white;
+    background: linear-gradient(45deg, #c81038, #ff4b2b);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.gender-btn:hover {
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+}
+
+
+
+/*Location part css*/
+
+  .locations {
+    max-width: 1100px;
+    margin: auto;
+    padding: 60px 20px;
+    text-align: center;
+    background-color: #8925e1;
+  }
+  
+  .locations h2 {
+    font-size: 2rem;
+    margin-bottom: 10px;
+  }
+.locations img{
+    width: 32px; 
+    height: auto;  /* Maintains aspect ratio */
+    vertical-align: middle;
+  
+}
+  
+  /* .flag {
+    width: 55px;
+    vertical-align: middle;
+    margin: 0 6px;
+  } */
+  
+  .description {
+    background-color:#8925e1 ;
+    color: white;
+    font-size: 1rem;
+    max-width: 800px;
+    margin: 0 auto 40px;
+    line-height: 1.6;
+  }
+  
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 20px;
+    padding: 0 10px;
+  }
+  
+  .grid a {
+    text-decoration: none;
+    padding: 16px 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    color: #222;
+    font-weight: 500;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.2s ease;
+    background: #fff;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+  }
+  
+  .grid a:hover {
+    border-color: #ae0bea;
+    box-shadow: 0 4px 12px rgba(233, 30, 99, 0.1);
+    color: white;
+    background-color: black;
+  }
+  
+
+/*Fotter part css*/
+  
+  .footer {
+    background-color: #7a29c0;
+    padding: 40px;
+    color: black;
+    font-size: 14px;
+  }
+  
+  .footer-top {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    max-width: 1200px;
+    margin: auto;
+  }
+  
+  .footer-column {
+    flex: 1 1 180px;
+    margin: 20px;
+  }
+  
+  .footer-column h4 {
+    font-size: 16px;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+  }
+  
+  .footer-column a {
+    display: block;
+    color: white;
+    margin-bottom: 10px;
+    text-decoration: none;
+  }
+  
+  .footer-column a:hover {
+    text-decoration: underline;
+  }
+  
+  .dropdowns {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-top: 20px;
+  }
+  
+  select {
+    padding: 8px;
+    font-size: 14px;
+  }
+  
+  .flag {
+    width: 20px;
+    margin-right: 6px;
+    vertical-align: middle;
+  }
+  
+  .social-icons i {
+    font-size: 18px;
+    margin: 0 8px;
+    cursor: pointer;
+  }
+  
+  .app-links img {
+    height: 40px;
+    margin: 10px 0;
+  }
+  
+  .footer-bottom {
+    text-align: center;
+    font-size: 12px;
+    color: white;
+    margin-top: 30px;
+    border-top: 1px solid #ddd;
+    padding-top: 15px;
+  }

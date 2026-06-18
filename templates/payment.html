@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Payment - Gloora Salon Booking</title>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background: linear-gradient(135deg, #f5f7fa, #c3cfe2); min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+        .payment-container { background: #fff; padding: 2rem 2.5rem; border-radius: 15px; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12); width: 420px; max-width: 95%; text-align: center; animation: fadeIn 0.6s ease-in-out; }
+        h2 { font-size: 1.5rem; color: #333; margin-bottom: 1rem; }
+        p { font-size: 1rem; margin-bottom: 0.5rem; color: #555; font-weight: 500; }
+        ul { list-style: none; margin: 1rem 0; padding: 0; text-align: left; }
+        ul li { background: linear-gradient(135deg, #eef3f8, #ffffff); padding: 0.9rem 1.1rem; border-radius: 10px; margin-bottom: 0.6rem; display: flex; flex-direction: column; align-items: flex-start; font-size: 0.95rem; font-weight: 600; color: black; line-height: 1.25; position: relative; }
+        ul li::before { content: "⏱️"; position: absolute; top: 0.9rem; right: 1rem; font-size: 1.1rem; }
+        ul li strong { font-size: 1rem; font-weight: 700; letter-spacing: 0.04em; color: #666; text-transform: uppercase; margin-bottom: 0.1rem; }
+        ul li .date-value { font-size: 0.95rem; color: #333; }
+        ul li .time-value { font-size: 1.05rem; font-weight: 700; color: #e11010; }
+        #pay-button { background: #3399cc; color: #fff; border: none; border-radius: 12px; padding: 0.8rem 1.6rem; font-size: 1.05rem; cursor: pointer; transition: all 0.3s ease; margin-top: 1rem; box-shadow: 0 4px 10px rgba(51, 153, 204, 0.3); }
+        #pay-button:hover { background: #267ba8; transform: translateY(-2px); box-shadow: 0 6px 15px rgba(51, 153, 204, 0.45); }
+        #pay-button:active { transform: translateY(1px); box-shadow: 0 3px 7px rgba(51, 153, 204, 0.25); }
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+    </style>
+</head>
+<body>
+
+<div class="payment-container">
+    <h2>Hello {{ username }}💇, please confirm your booking</h2>
+    <p>Selected Slots:</p>
+    <ul>
+        {% if slots %}
+            {% for slot in slots %}
+                <li>
+                    <strong>Date</strong>
+                    <span class="date-value">{{ slot.slot_date }}</span>
+
+                    <strong>Time</strong>
+                    <span class="time-value">{{ slot.slot_time }} – {{ slot.slot_end }}</span>
+                </li>
+            {% endfor %}
+        {% else %}
+            <li>No slot selected</li>
+        {% endif %}
+    </ul>
+
+    <p><strong>Total Amount: ₹{{ total_price }}</strong></p>
+
+    <button id="pay-button">Pay Now</button>
+</div>
+
+<!-- Alert Sound -->
+<audio id="slot-alert-sound" preload="auto">
+    <source src="/static/alert.mp3" type="audio/mpeg">
+</audio>
+
+
+<script>
+/* ================= RAZORPAY PAYMENT ================= */
+
+let totalPrice = Number("{{ total_price | default(0) }}");
+
+var options = {
+    key: "{{ razorpay_key }}",
+    amount: Math.round(totalPrice * 100),
+    currency: "INR",
+    name: "Gloora Salon Booking",
+    description: "Confirm your slot booking",
+    order_id: "{{ razorpay_order.id }}",
+
+    handler: function (response) {
+
+        /* ===== AFTER PAYMENT SUCCESS → SET REMINDER ===== */
+        {% if slots %}
+            {% set first_slot = slots[0] %}
+            scheduleSlotReminder(
+                "{{ first_slot.slot_date }}",
+                "{{ first_slot.slot_time }}"
+            );
+        {% endif %}
+
+        var form = document.createElement("form");
+        form.method = "POST";
+        form.action = "{{ url_for('payment_success') }}";
+
+        form.innerHTML = `
+            <input type="hidden" name="razorpay_payment_id" value="${response.razorpay_payment_id}">
+            <input type="hidden" name="razorpay_order_id" value="${response.razorpay_order_id}">
+            <input type="hidden" name="razorpay_signature" value="${response.razorpay_signature}">
+        `;
+
+        document.body.appendChild(form);
+        form.submit();
+    },
+
+    theme: { color: "#3399cc" }
+};
+
+document.getElementById("pay-button").onclick = function (e) {
+    e.preventDefault();
+    var rzp = new Razorpay(options);
+    rzp.open();
+};
+
+
+/* ================= SLOT REMINDER LOGIC ================= */
+
+const alertSound = document.getElementById("slot-alert-sound");
+
+function parseSlotDateTime(dateStr, timeStr) {
+    return new Date(`${dateStr}T${timeStr}:00`);
+}
+
+function playSlotAlert() {
+    alertSound.currentTime = 0;
+    alertSound.loop = true;
+
+    alertSound.play().catch(() => {
+        console.log("Autoplay blocked until user interaction");
+    });
+
+    alert("⏰ Reminder!\nYour salon slot is in 15 minutes.");
+}
+
+window.addEventListener("click", () => {
+    alertSound.loop = false;
+});
+
+function scheduleSlotReminder(slotDate, slotTime) {
+    const slotDateTime = parseSlotDateTime(slotDate, slotTime);
+    const alertTime = slotDateTime.getTime() - (10 * 60 * 1000);
+    const now = Date.now();
+
+    if (alertTime <= now) return;
+
+    localStorage.setItem("slotAlertTime", alertTime);
+
+    setTimeout(playSlotAlert, alertTime - now);
+}
+
+(function restoreReminder() {
+    const saved = localStorage.getItem("slotAlertTime");
+    if (!saved) return;
+
+    const delay = saved - Date.now();
+    if (delay > 0) setTimeout(playSlotAlert, delay);
+})();
+
+
+/* ================= CLOCK ICON CLICK ================= */
+
+document.querySelectorAll("ul li").forEach((li) => {
+    li.addEventListener("click", () => {
+        const date = li.querySelector(".date-value")?.innerText;
+        const time = li.querySelector(".time-value")?.innerText.split("–")[0].trim();
+
+        if (!date || !time) return;
+
+        alert(
+            `⏱ Slot Details\n\nDate: ${date}\nTime: ${time}\n\n🔔 Reminder will ring 15 minutes before.`
+        );
+    });
+});
+</script>
+
+
+</body>
+</html>

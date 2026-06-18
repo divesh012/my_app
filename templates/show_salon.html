@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <title>Salons</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet"
+        href="{{ url_for('static', filename='css/show_salon.css') }}">
+</head>
+
+<body>
+
+<div class="wrap">
+
+  <!-- HEADER -->
+  <div class="top">
+    <h2>Registered Salons</h2>
+    <a class="btn add-btn" href="{{ url_for('register_salon') }}">+ Add New Salon</a>
+  </div>
+
+  <!-- NAVBAR -->
+  <div class="navbar">
+    <a href="{{ url_for('gender') }}">Home</a>
+    <a href="{{ url_for('about') }}">About</a>
+    <a href="{{ url_for('services_categories') }}">Services & Categories</a>
+    <a href="{{ url_for('help_page') }}">Contact Us</a>
+  </div>
+
+  <div class="search_wrapper">
+    <form class="search_box" method="GET" action="{{ url_for('show_salons') }}">
+        <input type="text"
+               name="search"
+               placeholder="Search salons..."
+               id="searchInput"
+               value="{{ search }}">
+        <button type="submit" class="search_btn">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85zm-5.242 1.414a5 5 0 1 1 0-10 5 5 0 0 1 0 10z"/>
+            </svg>
+        </button>
+    </form>
+  </div>
+
+  <!-- SALON GRID -->
+  <div class="grid">
+    {% for salon in salons %}
+    <div class="card">
+
+      {% if salon.image %}
+        <img src="{{ url_for('static', filename=salon.image) }}" alt="{{ salon.salon_name }}">
+      {% else %}
+        <div class="no-img">No Image</div>
+      {% endif %}
+
+      <h3>{{ salon.salon_name }}</h3>
+<p class="muted">
+  📍
+  {% if salon.address %}{{ salon.address }}, {% endif %}
+  {{ salon.city }}, {{ salon.state }}
+</p>
+
+      <p class="muted">📞 {{ salon.contact }}</p>
+
+      <!-- BOOKING FORM -->
+      <form method="GET" action="{{ url_for('book_slot_for_salon', salon_id=salon.id) }}">
+        <div class="service-list">
+            <strong>Services Offered:</strong>
+            {% for service in salon.services %}
+            <div class="service-item">
+                <span class="service-name">{{ service.name }}</span>
+                <span class="service-price">₹{{ service.price }}</span>
+            </div>
+            {% endfor %}
+        </div>
+
+        {% if salon.status == 'ON' %}
+            {% if username %}
+                <button type="submit" class="btn book-btn open-btn">Book Slot</button>
+            {% else %}
+                <button type="button" class="btn book-btn open-btn" disabled title="Please login first">Book Slot</button>
+            {% endif %}
+        {% else %}
+            <button type="button" class="btn book-btn closed-btn" disabled>Salon Closed</button>
+        {% endif %}
+      </form>
+
+      <!-- RATING -->
+      <p class="rating">
+        ⭐ {{ (salon.rating_total / salon.rating_count)|round(1) if salon.rating_count else 0 }}/5
+      </p>
+
+      <form method="POST" action="{{ url_for('rate_salon', salon_id=salon.id) }}" class="rating-form">
+        <select name="rating" required>
+          <option value="">Rate</option>
+          <option value="1">⭐ 1</option>
+          <option value="2">⭐ 2</option>
+          <option value="3">⭐ 3</option>
+          <option value="4">⭐ 4</option>
+          <option value="5">⭐ 5</option>
+        </select>
+        <button type="submit" class="rate-btn">Submit</button>
+      </form>
+
+      {% if username == salon.owner_username %}
+        <!-- SALON TOGGLE BUTTON -->
+        <button onclick="openPassKeyPopup({{ salon.id }}, 'salon')" class="btn toggle-btn salon-toggle-btn">
+            Toggle Salon ON / OFF
+        </button>
+
+        <!-- WORKER TOGGLE BUTTON -->
+        <button onclick="openPassKeyPopup({{ salon.id }}, 'worker')" class="btn toggle-btn worker-toggle-btn">
+            Manage Workers
+        </button>
+      {% endif %}
+
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+<!-- PASSKEY MODAL -->
+<div id="passKeyModal" style="display:none;">
+  <form id="passKeyForm" method="POST">
+    <span id="closeModal" style="cursor:pointer; float:right; font-size:18px;">&times;</span>
+    <h3>Enter Pass Key</h3>
+    <input type="password" name="pass_key" maxlength="4" pattern="\d{4}" required>
+    <button class="btn">Submit</button>
+  </form>
+</div>
+
+<!-- JS -->
+<script>
+  // Open modal for salon toggle or worker access
+  function openPassKeyPopup(salonId, actionType) {
+      const modal = document.getElementById("passKeyModal");
+      const form = document.getElementById("passKeyForm");
+      if (!modal || !form) return;
+
+      // Set the form action dynamically
+      form.action = actionType === 'worker' 
+          ? '/verify_worker_access/' + salonId 
+          : '/toggle_verify/' + salonId;
+
+      modal.style.display = 'flex';
+  }
+
+  // Close modal when clicking outside or on ×
+  const modal = document.getElementById("passKeyModal");
+  window.onclick = e => { if (e.target.id === "passKeyModal") modal.style.display = 'none'; };
+  document.getElementById("closeModal").onclick = () => modal.style.display = 'none';
+
+  // Search box auto-focus
+  const searchBox = document.querySelector('.search_box');
+  const searchInput = document.getElementById('searchInput');
+  window.addEventListener('load', () => {
+      searchBox.classList.add('expanded');
+      searchInput.focus();
+  });
+</script>
+
+<!-- Footer Section -->
+<div class="footer" id="footer">
+  <div class="footer-top">
+      <div class="footer-column">
+          <h4>About SalonFinder</h4>
+          <a href="#">Who We Are</a>
+          <a href="#">Blog</a>
+          <a href="#">Work With Us</a>
+          <a href="#">Report Issue</a>
+          <a href="{{ url_for('contact_us') }}">Contact Us</a>
+      </div>
+      <div class="footer-column">
+          <h4>SalonVerse</h4>
+          <a href="#">SalonFinder</a>
+          <a href="#">BeautyVerse</a>
+          <a href="#">HairCare Hub</a>
+          <a href="#">GlowUp</a>
+      </div>
+      <div class="footer-column">
+          <h4>Learn More</h4>
+          <a href="{{ url_for('cancellation') }}">Cancellation & Refund Policy</a>
+          <a href="{{ url_for('privacy') }}">Privacy Policy</a>
+          <a href="{{ url_for('term') }}">Terms & Conditions</a>
+      </div>
+      <div class="footer-column">
+          <h4>Social Links</h4>
+          <div class="social-icons">
+              <i class="fab fa-linkedin"></i>
+              <i class="fab fa-instagram"></i>
+              <i class="fab fa-x-twitter"></i>
+              <i class="fab fa-youtube"></i>
+              <i class="fab fa-facebook"></i>
+          </div>
+          <div class="app-links">
+              <img src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg" alt="App Store">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" alt="Play Store">
+          </div>
+      </div>
+      <div class="footer-column">
+          <div class="dropdowns">
+              <select>
+                  <option selected>🇮🇳 India</option>
+                  <option>🇺🇸 United States</option>
+                  <option>🇬🇧 United Kingdom</option>
+                  <option>🇩🇪 Germany</option>
+                  <option>🇫🇷 France</option>
+                  <option>🇯🇵 Japan</option>
+                  <option>🇨🇦 Canada</option>
+                  <option>🇦🇺 Australia</option>
+              </select>
+              <select>
+                  <option selected>English</option>
+                  <option>Deutsch</option>
+                  <option>Français</option>
+                  <option>日本語</option>
+                  <option>Español</option>
+                  <option>हिन्दी</option>
+              </select>
+          </div>
+      </div>
+  </div>
+  <div class="footer-bottom">
+      © 2025 GLOOVI™ Ltd. All rights reserved. By continuing, you agree to our Terms, Privacy Policy, and Cookie Policy.
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Verify OTP</title>
+    <style>
+        body { font-family: Arial; background: #f4f6f8; }
+        .box {
+            width: 360px;
+            margin: 100px auto;
+            padding: 25px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,.1);
+        }
+        input, button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            font-size: 15px;
+        }
+        button {
+            background: #28a745;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+        .resend-btn {
+            background: #6c757d;
+            cursor: not-allowed;
+        }
+        .alert {
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 5px;
+        }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .warning { background: #fff3cd; color: #856404; }
+        .timer {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #555;
+            text-align: center;
+        }
+        a {
+            display: block;
+            text-align: center;
+            margin-top: 10px;
+            text-decoration: none;
+            color: #007bff;
+        }
+    </style>
+</head>
+<body>
+
+<div class="box">
+    <h3>Verify OTP</h3>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% for category, msg in messages %}
+        <div class="alert {{ category }}">{{ msg }}</div>
+      {% endfor %}
+    {% endwith %}
+
+    <form method="POST">
+        <input type="text" name="otp" placeholder="Enter 6-digit OTP" required>
+        <button type="submit">Verify OTP</button>
+    </form>
+
+    <div class="timer">
+        Resend OTP in <span id="countdown">30</span> seconds
+    </div>
+
+    <!-- Change URL according to male/female -->
+    <a id="resendLink" href="{{ url_for('forgot_password_male') }}" style="pointer-events:none; color:gray;">
+        Resend OTP
+    </a>
+</div>
+
+<script>
+    let timeLeft = 30;
+    const countdownEl = document.getElementById("countdown");
+    const resendLink = document.getElementById("resendLink");
+
+    const timer = setInterval(() => {
+        timeLeft--;
+        countdownEl.innerText = timeLeft;
+
+        if (timeLeft <= 0) {
+            clearInterval(timer);
+            countdownEl.innerText = "0";
+            resendLink.style.pointerEvents = "auto";
+            resendLink.style.color = "#007bff";
+        }
+    }, 1000);
+</script>
+
+</body>
+</html>

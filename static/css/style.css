@@ -1,0 +1,9 @@
+body { font-family: Arial, sans-serif; margin: 20px; }
+h1, h2 { color: #333; }
+a { margin-right: 10px; text-decoration: none; color: blue; }
+table { border-collapse: collapse; width: 80%; margin-bottom: 20px; }
+table, th, td { border: 1px solid #333; padding: 5px; text-align: center; }
+button { padding: 5px 10px; margin-top: 10px; }
+.container { text-align: center; }
+.gender-buttons a { display: inline-block; padding: 10px 20px; margin: 10px; background: #007BFF; color: white; border-radius: 5px; }
+.gender-buttons a:hover { background: #0056b3; }

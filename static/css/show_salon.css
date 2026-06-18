@@ -1,0 +1,555 @@
+/* =========================================
+                GLOBAL STYLING
+========================================= */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    color: white;
+    background: linear-gradient(135deg, #6a11cb, #aa25fc);
+}
+
+/* =========================================
+                NAVBAR
+========================================= */
+.navbar {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    padding: 20px 0;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.navbar a {
+    text-decoration: none;
+    color: black;
+    transition: color 0.3s;
+}
+
+.navbar a:hover {
+    color: #f3eff1;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+/* =========================================
+                WRAPPER
+========================================= */
+.wrap {
+    max-width: 1000px;
+    margin: auto;
+    padding: 20px;
+}
+
+.top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+/* =========================================
+                SEARCH BOX
+========================================= */
+/* Container aligned to right */
+/* Wrapper aligned to right */
+.search_wrapper {
+    display: flex;
+    justify-content: flex-end; /* right side */
+    margin: 20px;
+}
+
+/* Search box */
+.search_box {
+    display: flex;
+    align-items: center;
+    width: 40px; /* collapsed width */
+    border-radius: 50px;
+    /* border: 1px solid #ddd; */
+    color: white;
+    overflow: hidden;
+    transition: width 0.3s ease, background-color 0.3s ease;
+    background: linear-gradient(135deg, #6a11cb, #aa25fc);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+/* Hover or focus expands the box */
+.search_box:hover,
+.search_box:focus-within {
+    width: 250px; /* expanded width */
+}
+
+/* Input field */
+.search_box input {
+    flex: 1;
+    border: none;
+    outline: none;
+    padding: 10px 15px;
+    font-size: 14px;
+    display: none; /* hide initially */
+    color : white;
+    background-color: transparent; /* seamless with container */
+}
+
+/* Show input on hover/focus */
+.search_box:hover input,
+.search_box:focus-within input {
+    display: block;
+    color: white;
+}
+
+/* Search button / icon */
+.search_box .search_btn {
+    border: none;
+    background: #a409f7;
+    color: #fff;
+    padding: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0; /* prevent shrinking when expanded */
+    transition: background 0.2s, width 0.3s ease;
+}
+/* Placeholder text color */
+.search_box input::placeholder {
+    /*color: #aaa;  grey color */
+     color: #fff; /* uncomment this for white */
+}
+
+
+/* Hover effect on button */
+.search_box .search_btn:hover {
+    background: #8703c8;
+}
+
+/* Icon */
+.search_box .search_btn svg {
+    width: 16px;
+    height: 16px;
+    
+}
+
+/* Optional: smooth placeholder color */
+.search_box input::placeholder {
+    color: #fff; /* uncomment this for white */
+    transition: color 0.3s;
+}
+
+
+/* =========================================
+                GRID + CARD
+========================================= */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+    gap: 16px;
+}
+
+.card {
+    background: #7905e6;
+    padding: 14px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.07);
+    transition: transform .2s;
+}
+p.muted {
+    color: white;
+    font-style: italic;
+}
+h3 {
+    color: rgb(243, 223, 7);
+}
+
+
+.card:hover {
+    transform: translateY(-4px);
+}
+
+img {
+    width: 100%;
+    height: 190px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.no-img {
+    height: 190px;
+    background: #ececec;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    color: black;
+    font-size: 14px;
+}
+.service-list {
+    margin: 15px 0;
+}
+
+.service-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 14px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    margin-bottom: 8px;
+    background: #fafafa;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.service-item:hover {
+    background: #e6f7ff;
+    border-color: #4CAF50;
+}
+
+
+
+
+.service-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #f7f9fc;
+    padding: 0.6rem 0.8rem;
+    border-radius: 6px;
+    margin-bottom: 0.4rem;
+    font-size: 0.9rem;
+}
+
+.service-name {
+    font-weight: 600;
+    color: #333;
+}
+
+.service-price {
+    font-weight: 700;
+    color: #3399cc;
+}
+
+
+.total-box {
+    margin-top: 15px;
+    font-size: 1.2em;
+    font-weight: bold;
+    text-align: right;
+}
+
+button#bookBtn {
+    width: 100%;
+    margin-top: 15px;
+    padding: 12px;
+    font-size: 1em;
+    border: none;
+    border-radius: 8px;
+    background: #4CAF50;
+    color: white;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button#bookBtn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+}
+
+.price {
+    font-weight: bold;
+    color: #222;
+}
+
+.rating {
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+}
+
+/* =========================================
+                BUTTONS
+========================================= */
+.btn {
+    width: 100%;
+    display: block;
+    padding: 12px;
+    border-radius: 8px;
+    border: none;
+    font-size: 15px;
+    font-weight: 600;
+    text-align: center;
+    cursor: pointer;
+    color: white;
+    box-sizing: border-box;
+    transition: .25s;
+}
+
+/* Add Salon */
+.add-btn {
+    background: #28a745;
+    text-decoration: none;
+}
+
+.add-btn:hover {
+    background: #1f8838;
+    text-decoration: underline;
+}
+
+/* Book Slot */
+.book-btn {
+    background: red;
+    width: 100%;
+    margin-top: auto;
+    margin-bottom: 8px;   /* << ADDED SPACING FIX */
+    text-decoration: none;
+}
+
+.book-btn:hover {
+    background: #c10020;
+    text-decoration: underline;
+}
+
+/* Rating Form */
+.rating-form {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    gap: 6px;
+}
+
+.rate-select {
+    padding: 5px;
+    border-radius: 6px;
+    border: 1px solid #aaa;
+    font-size: 14px;
+}
+
+.rate-btn {
+    padding: 6px 12px;
+    border: none;
+    background: #ff9800;
+    color: white;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: .2s;
+}
+
+.rate-btn:hover {
+    background: #e08600;
+}
+
+
+.service-list {
+    margin-top: 10px;
+}
+
+.service-item {
+    display: block;
+    background: #f4f4f4;
+    padding: 8px 10px;
+    margin-bottom: 6px;
+    border-radius: 8px;
+    font-size: 14px;
+    border: 1px solid #ddd;
+    cursor: not-allowed;
+}
+
+.service-item input[type="checkbox"] {
+    margin-right: 8px;
+    transform: scale(1.2);
+}
+
+/* Base toggle button */
+.toggle-btn {
+    width: 100%;
+    margin-top: 8px;
+    text-align: center;
+}
+
+/* Salon toggle */
+.salon-toggle-btn {
+    background: #ff9800;
+    color: white;
+}
+
+.salon-toggle-btn:hover {
+    background: #e08600;
+}
+
+/* Worker toggle (already good) */
+.worker-toggle-btn {
+    background: #222;
+    color: white;
+    text-decoration: none;
+    ;
+}
+
+.worker-toggle-btn:hover {
+    background: #444;
+}
+/* ===== BOOK SLOT STATUS COLORS ===== */
+
+/* Salon OPEN → GREEN */
+.open-btn {
+    background: #28a745;
+}
+
+.open-btn:hover {
+    background: #1f8838;
+}
+
+/* Salon CLOSED → RED */
+.closed-btn {
+    background: #dc3545;
+    cursor: not-allowed;
+}
+
+.closed-btn:hover {
+    background: #c82333;
+}
+
+/* ---------------- PASSKEY MODAL STYLES ---------------- */
+#passKeyModal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6); /* semi-transparent background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+#passKeyForm {
+  background: #ffffff;
+  padding: 30px 40px;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  width: 320px;
+}
+
+#passKeyForm h3 {
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+  color: #333;
+}
+
+#passKeyForm input[type="password"] {
+  width: 100%;
+  padding: 12px 15px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  transition: border-color 0.3s;
+}
+
+#passKeyForm input[type="password"]:focus {
+  outline: none;
+  border-color: #007BFF;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+#passKeyForm .btn {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  background: #007BFF;
+  color: white;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+}
+
+#passKeyForm .btn:hover {
+  background: #0056b3;
+  transform: translateY(-2px);
+}
+
+/*Fotter part css*/
+  
+  .footer {
+    background-color: #7a29c0;
+    padding: 40px;
+    color: black;
+    font-size: 14px;
+  }
+  
+  .footer-top {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    max-width: 1200px;
+    margin: auto;
+  }
+  
+  .footer-column {
+    flex: 1 1 180px;
+    margin: 20px;
+  }
+  
+  .footer-column h4 {
+    font-size: 16px;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+  }
+  
+  .footer-column a {
+    display: block;
+    color: white;
+    margin-bottom: 10px;
+    text-decoration: none;
+  }
+  
+  .footer-column a:hover {
+    text-decoration: underline;
+  }
+  
+  .dropdowns {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-top: 20px;
+  }
+  
+  select {
+    padding: 8px;
+    font-size: 14px;
+  }
+  
+  .flag {
+    width: 20px;
+    margin-right: 6px;
+    vertical-align: middle;
+  }
+  
+  .social-icons i {
+    font-size: 18px;
+    margin: 0 8px;
+    cursor: pointer;
+  }
+  
+  .app-links img {
+    height: 40px;
+    margin: 10px 0;
+  }
+  
+  .footer-bottom {
+    text-align: center;
+    font-size: 12px;
+    color: white;
+    margin-top: 30px;
+    border-top: 1px solid #ddd;
+    padding-top: 15px;
+  }

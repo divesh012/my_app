@@ -1,0 +1,329 @@
+/* Reset */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    color: white;
+background-color: #8e3de4
+}
+
+/* Navigation Bar Styling */
+.navbar {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    padding: 20px 0;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.navbar a {
+    text-decoration: none;
+    color: black;
+    transition: color 0.3s;
+}
+
+.navbar a:hover {
+    color: #f3eff1;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+
+/* Header top row */
+.header-top {
+    display: flex;
+    justify-content: space-between; /* left title, right user info */
+    align-items: center;
+    padding: 10px 20px; /* smaller height */
+    background-color: #8e3de4;
+    color: white;
+    border-bottom: 1px solid #ddd;
+    /* border-radius: 8px 8px 0 0; /* rounded top corners */
+}
+
+.header-top h1 {
+    font-size: 1.9rem; /* smaller size */
+    font-weight: 700;
+    margin: 0;
+}
+
+.header-top .user-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.header-top .user-actions a,
+.header-top .user-actions span {
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.2);
+    transition: 0.3s;
+}
+
+.header-top .user-actions a:hover {
+    background: rgba(255,255,255,0.35);
+}
+
+
+.user-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.user-actions a, .user-actions span {
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    padding: 8px 16px;
+    border-radius: 25px;
+    background: rgba(255,255,255,0.2);
+    transition: 0.3s;
+}
+
+.user-actions a:hover {
+    background: rgba(255,255,255,0.35);
+}
+
+/* Salon Buttons */
+.salon-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin: 15px 0;
+    flex-wrap: wrap;
+}
+
+.salon-buttons .btn {
+    padding: 12px 25px;
+    background: #2e7d32; /* dark green */
+    color: white;
+    text-decoration: none;
+    border-radius: 50px;
+    font-weight: 700;
+    box-shadow: 0 4px 10px rgba(46,125,50,0.4);
+    transition: 0.3s;
+}
+
+.salon-buttons .btn:hover {
+    background: #388e3c; /* slightly lighter green */
+    box-shadow: 0 6px 15px rgba(56,142,60,0.5);
+}
+
+/* Main Content */
+main {
+    max-width: 500px;
+    margin: 50px auto;
+    padding: 35px;
+    background: #8f33f1;
+    border-radius: 15px;
+    box-shadow: 0 6px 25px rgba(0,0,0,0.1);
+}
+
+/* Headings */
+h2 {
+    text-align: center;
+    margin-bottom: 25px;
+    color: black; /* dark green */
+    font-size: 26px;
+    text-shadow: 1px 1px 3px rgb(240, 237, 237);
+}
+
+/* Labels & Inputs */
+label {
+    display: block;
+    margin-top: 15px;
+    font-weight: 600;
+    color: black;
+}
+
+input {
+    width: 100%;
+    padding: 12px;
+    margin-top: 5px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    transition: 0.3s;
+}
+
+input:focus {
+    border-color: #2e7d32; /* green focus border */
+    box-shadow: 0 0 8px rgba(46,125,50,0.3);
+    outline: none;
+}
+
+/* Buttons */
+button {
+    width: 100%;
+    padding: 14px;
+    margin-top: 20px;
+    background: red; /* dark red */
+    color: white;
+    border: none;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s;
+    box-shadow: 0 4px 12px rgba(255,0,0,0.4);
+}
+
+button:hover {
+    background: #ff4d4d; /* hover red */
+    box-shadow: 0 6px 18px rgba(255,77,77,0.5);
+}
+
+
+.forgot-link {
+    margin-top: 10px;
+    text-align: right;
+}
+
+.forgot-link a {
+    color: rgb(255, 255, 255);
+    font-size: 14px;
+    text-decoration: underline;
+}
+
+
+/* Alerts */
+.alert {
+    padding: 14px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    font-weight: 600;
+    text-align: center;
+    font-size: 15px;
+}
+
+.alert.success { 
+    background: #d4edda; 
+    color: #155724; 
+    border: 1px solid #c3e6cb;
+}
+
+.alert.error { 
+    background: #f8d7da; 
+    color: #721c24; 
+    border: 1px solid #f5c6cb;
+}
+
+/* Login/Register link */
+.login-link {
+    text-align: center;
+    color: black;
+    margin-top: 25px;
+    font-weight: 500;
+}
+
+.login-link a {
+    color: rgba(255, 255, 255, 0.764); /* red */
+    font-weight: 700;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+.login-link a:hover {
+    color: white;
+    text-decoration: underline;
+}
+
+/* Responsive */
+@media screen and (max-width: 600px) {
+    main {
+        margin: 30px 15px;
+        padding: 25px;
+    }
+
+    header h1 {
+        font-size: 24px;
+    }
+}
+
+/*Fotter part css*/
+  
+  .footer {
+    background-color: #7a29c0;
+    padding: 40px;
+    color: black;
+    font-size: 14px;
+  }
+  
+  .footer-top {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    max-width: 1200px;
+    margin: auto;
+  }
+  
+  .footer-column {
+    flex: 1 1 180px;
+    margin: 20px;
+  }
+  
+  .footer-column h4 {
+    font-size: 16px;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+  }
+  
+  .footer-column a {
+    display: block;
+    color: white;
+    margin-bottom: 10px;
+    text-decoration: none;
+  }
+  
+  .footer-column a:hover {
+    text-decoration: underline;
+  }
+  
+  .dropdowns {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-top: 20px;
+  }
+  
+  select {
+    padding: 8px;
+    font-size: 14px;
+  }
+  
+  .flag {
+    width: 20px;
+    margin-right: 6px;
+    vertical-align: middle;
+  }
+  
+  .social-icons i {
+    font-size: 18px;
+    margin: 0 8px;
+    cursor: pointer;
+  }
+  
+  .app-links img {
+    height: 40px;
+    margin: 10px 0;
+  }
+  
+  .footer-bottom {
+    text-align: center;
+    font-size: 12px;
+    color: white;
+    margin-top: 30px;
+    border-top: 1px solid #ddd;
+    padding-top: 15px;
+  }

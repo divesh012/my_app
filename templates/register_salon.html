@@ -1,0 +1,248 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Register Salon</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/register_salon.css') }}">
+</head>
+<body>
+
+<div class="card">
+  <h2>Register Your Salon</h2>
+  <p class="form-note">
+  Note: Please ensure all details are filled correctly. Accurate details help customers quickly find your salon and book services easily.
+</p>
+
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for cat, m in messages %}
+        <div class="msg {{ 'error' if cat=='error' else 'success' }}">{{ m }}</div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  <form id="mainForm" action="{{ url_for('register_salon') }}" method="post" enctype="multipart/form-data">
+
+    <!-- Salon Name -->
+    <label>Salon Name *</label>
+    <input type="text" name="name" required>
+
+    <!-- Address -->
+    <label>Address (street)</label>
+    <textarea name="address"></textarea>
+
+    <div class="row">
+      <div>
+        <label>City *</label>
+        <input type="text" name="city" required>
+      </div>
+      <div>
+        <label>State *</label>
+        <input type="text" name="state" required>
+      </div>
+    </div>
+
+    <!-- Contact -->
+    <label>Contact Number *</label>
+    <input type="text" name="contact" required maxlength="10" pattern="\d{10}"
+           oninput="this.value=this.value.replace(/[^0-9]/g,'').slice(0,10);"
+           title="Please enter a 10-digit mobile number">
+
+    <!-- ✅ NEW: Worker Count -->
+    <label>Total Workers *</label>
+    <input type="number"
+           name="worker_count"
+           min="1"
+           value="1"
+           required
+           title="Minimum 1 worker required">
+
+  <!-- Services -->
+<label>Services (add name & price, press Enter) *</label>
+
+<div id="tagsBox"
+     style="display:flex;flex-wrap:wrap;gap:6px;padding:6px;border:1px solid #ccc;border-radius:6px;cursor:text;"
+     onclick="document.getElementById('serviceInput').focus()">
+</div>
+
+<input type="text"
+       id="serviceInput"
+       placeholder="Type service & price (e.g., Haircut 200)"
+       style="width:100%;padding:8px;margin-top:5px;border-radius:6px;"
+       inputmode="text"
+       enterkeyhint="done"
+       onkeydown="addTag(event)">
+
+<div id="hiddenInputsContainer"></div>
+
+<!-- MOBILE SAFETY BUTTON (VERY IMPORTANT) -->
+<button class="add_ser_button" type="button" onclick="addTagFromButton()" style="margin-top:6px;">
+    Add Service
+</button>
+
+    <!-- Pass Key -->
+    <label>Pass Key (used for owner actions) *</label>
+    <input type="password" name="pass_key" maxlength="4" pattern="\d{4}" required
+           oninput="this.value=this.value.replace(/[^0-9]/g,'').slice(0,4);">
+
+    <!-- Image -->
+    <label>Salon Image (one)</label>
+    <input type="file" name="image" accept="image/*">
+
+    <!-- Buttons -->
+    <div class="button-container">
+      <button type="submit" class="btn">Register Salon</button>
+      <a class="btn-show" href="{{ url_for('show_salons') }}">Show Salon</a>
+    </div>
+  </form>
+</div>
+
+<style>
+  .add_ser_button {
+    margin-top: 6px;
+    padding: 6px 14px;
+    background-color: #ff6f61;
+    color: #ffffff;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.add_ser_button:hover {
+    background-color: #ff5a4d;
+}
+
+.add_ser_button:active {
+    transform: scale(0.96);
+}
+
+.form-note {
+  margin-top: 8px;
+  font-size: 15px;
+  background-color: white;
+  color: red ;
+  line-height: 1.4;
+}
+</style>
+
+
+<script>
+let tags = [];
+
+// ENTER KEY
+function addTag(event) {
+  if (event.key === "Enter") {
+    event.preventDefault();
+    addServiceLogic();
+  }
+}
+
+// BUTTON
+function addTagFromButton() {
+  addServiceLogic();
+}
+
+// CORE LOGIC (FIXED)
+function addServiceLogic() {
+  const inputField = document.getElementById("serviceInput");
+  let input = inputField.value.trim();
+
+  if (!input) return;
+
+  // ✅ FIX 1: Normalize spaces
+  let parts = input.split(/\s+/);
+
+  if (parts.length < 2) {
+    alert("Enter service name and price (e.g., Haircut 200)");
+    return;
+  }
+
+  let price = parts.pop();
+
+  // ✅ FIX 2: Price must be number
+  if (isNaN(price)) {
+    alert("Price must be a number");
+    return;
+  }
+
+  let name = parts.join(" ");
+
+  if (!tags.some(t => t.name === name)) {
+    tags.push({ name, price });
+    updateTags();
+  }
+
+  inputField.value = "";
+}
+
+// REMOVE
+function removeTag(name) {
+  tags = tags.filter(t => t.name !== name);
+  updateTags();
+}
+
+// UPDATE UI + HIDDEN INPUTS
+function updateTags() {
+  const box = document.getElementById("tagsBox");
+  const container = document.getElementById("hiddenInputsContainer");
+
+  box.innerHTML = "";
+  container.innerHTML = "";
+
+  tags.forEach(t => {
+    const el = document.createElement("div");
+    el.style = `
+      background:#eaeaea;
+      padding:6px 10px;
+      border-radius:6px;
+      display:flex;
+      align-items:center;
+      gap:6px;
+    `;
+
+    el.innerHTML = `
+      ${t.name} - ₹${t.price}
+      <span style="cursor:pointer;font-weight:bold;"
+            onclick="removeTag('${t.name}')">&times;</span>
+    `;
+
+    box.appendChild(el);
+
+    const inpName = document.createElement("input");
+    inpName.type = "hidden";
+    inpName.name = "service_name[]";
+    inpName.value = t.name;
+
+    const inpPrice = document.createElement("input");
+    inpPrice.type = "hidden";
+    inpPrice.name = "service_price[]";
+    inpPrice.value = t.price;
+
+    container.appendChild(inpName);
+    container.appendChild(inpPrice);
+  });
+}
+
+// ✅ FINAL SUBMIT FIX
+document.getElementById("mainForm").addEventListener("submit", function(e) {
+
+  // Auto-add pending input
+  if (document.getElementById("serviceInput").value.trim() !== "") {
+    addServiceLogic();
+  }
+
+  if (tags.length === 0) {
+    alert("Please add at least one valid service with price!");
+    e.preventDefault();
+  }
+});
+</script>
+
+
+
+</body>
+</html>

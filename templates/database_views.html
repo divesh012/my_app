@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Database View</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <h1>Admin Dashboard</h1>
+    <a href="{{ url_for('logout') }}">Logout</a>
+
+    <h2>All Users</h2>
+    <table border="1">
+        <tr><th>ID</th><th>Username</th><th>Email</th></tr>
+        {% for user in users %}
+        <tr><td>{{ user['user_id'] }}</td><td>{{ user['username'] }}</td><td>{{ user['email'] }}</td></tr>
+        {% endfor %}
+    </table>
+
+    <h2>All Salons</h2>
+    <table border="1">
+        <tr><th>ID</th><th>Name</th><th>Address</th><th>Lat</th><th>Lng</th></tr>
+        {% for salon in salons %}
+        <tr><td>{{ salon['id'] }}</td><td>{{ salon['name'] }}</td><td>{{ salon['address'] }}</td><td>{{ salon['lat'] }}</td><td>{{ salon['lng'] }}</td></tr>
+        {% endfor %}
+    </table>
+
+    <h2>All Slots</h2>
+    <table border="1">
+        <tr><th>ID</th><th>Username</th><th>Salon ID</th><th>Start Time</th><th>End Time</th></tr>
+        {% for slot in slots %}
+        <tr><td>{{ slot['id'] }}</td><td>{{ slot['username'] }}</td><td>{{ slot['salon_id'] }}</td><td>{{ slot['start_time'] }}</td><td>{{ slot['end_time'] }}</td></tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

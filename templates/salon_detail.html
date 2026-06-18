@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ salon.salon_name }} - Details</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/show_salon.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <h1>{{ salon.salon_name }}</h1>
+        <p>📍 {{ salon.address }}</p>
+        <p>📞 {{ salon.contact }}</p>
+        {% if salon.price %}
+        <p>💰 Starting at ₹{{ salon.price }}</p>
+        {% endif %}
+
+        <!-- Back to all salons -->
+        <a href="{{ url_for('show_salon') }}">⬅ Back to Salons</a>
+    </header>
+
+    <hr>
+
+    <main>
+        <h2>Services Offered:</h2>
+        <form method="POST">
+            {% if services %}
+                {% for service in services %}
+                    <div>
+                        <input type="checkbox" name="services" value="{{ service.id }}" id="service-{{ service.id }}">
+                        <label for="service-{{ service.id }}">
+                            {{ service.name }} - ₹{{ service.price }}
+                        </label>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>No services available for this salon.</p>
+            {% endif %}
+
+            <h3>Select Slot:</h3>
+            <input type="datetime-local" name="slot" required>
+
+            <br><br>
+            <button type="submit">Book Now</button>
+        </form>
+    </main>
+
+    <footer>
+        <p>© 2025 GLOOVI™. All rights reserved.</p>
+    </footer>
+</body>
+</html>

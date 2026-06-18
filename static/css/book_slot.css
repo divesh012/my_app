@@ -1,0 +1,345 @@
+/* ---------------- GLOBAL ---------------- */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    color: white;
+    background: linear-gradient(135deg, #6a11cb, #aa25fc);
+    position: relative;
+}
+
+/* ---- Logo ---- */
+.logo {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-size: 32px;
+    font-weight: 800;
+    color: #fff;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    letter-spacing: 2px;
+    text-shadow: 2px 2px 6px rgba(0,0,0,0.3);
+    cursor: default;
+}
+
+.logo:hover {
+    color: #f3eff1;
+    border: 1px solid #fff;
+}
+
+/* ---- Navbar ---- */
+.navbar {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    padding: 20px 0;
+    margin-top: 80px;
+    font-size: 18px;
+    font-weight: bold;
+    position: relative;
+    z-index: 1;
+}
+
+.navbar a {
+    text-decoration: none;
+    color: black;
+    transition: color 0.3s;
+}
+
+.navbar a:hover {
+    color: #f3eff1;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+/* ---- Card ---- */
+.card {
+    max-width: 600px;
+    margin: 30px auto;
+    background: #f9f9f9;
+    padding: 25px;
+    border-radius: 14px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+    animation: fadeIn 0.4s ease-in-out;
+}
+
+.card h2 {
+    text-align: center;
+    color: #2e80ff;
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+
+.card h3 {
+    color: red;
+    text-align: center;
+    font-weight: 550;
+}
+
+.card p,
+label,
+.card h5 {
+    color: black;
+    font-size: 16px;
+    margin-bottom: 12px;
+}
+
+/* ---- Inputs ---- */
+.card input,
+.card select {
+    width: 100%;
+    padding: 12px;
+    margin-top: 12px;
+    border-radius: 10px;
+    border: 1.4px solid #d6d6d6;
+    outline: none;
+    font-size: 15px;
+    background: #fafafa;
+    transition: 0.25s;
+}
+
+.card input:focus,
+.card select:focus {
+    border-color: #2d8cff;
+    box-shadow: 0px 0px 4px rgba(45, 140, 255, 0.4);
+    background: #ffffff;
+}
+
+/* ---- Buttons ---- */
+.btn-book,
+.btn-show,
+.slot-btn,
+.btn-slot-details {
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.25s;
+    text-align: center;
+    text-decoration: none;
+    box-sizing: border-box; /* ensures width includes padding */
+}
+
+/* Book Button */
+.btn-book {
+     display: block;      /* 🔥 IMPORTANT */
+    width: 100%;
+    padding: 12px;
+    background: red;
+    color: #fff;
+    border: none;
+    margin-top: 12px;
+}
+
+.btn-book:hover {
+    background: rgba(214, 67, 67, 0.754);
+}
+
+/* Show Button */
+.btn-show {
+     display: block;      /* 🔥 IMPORTANT */
+    width: 100%;         /* same as book */
+    padding: 12px;       /* same as book */
+    background: #28a745;
+    color: #fff;
+    border: none;
+    margin-top: 12px;
+}
+
+.btn-show:hover {
+    background: #51c46a;
+}
+
+/* ---- Slot Buttons ---- */
+#slot-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 15px;
+}
+
+.slot-btn {
+    padding: 10px 14px;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    background-color: rgb(33, 247, 4); /* available */
+    color: black;
+    font-weight: 600;
+    border-radius: 6px;
+    transition: 0.2s;
+}
+
+.slot-btn:hover:not(:disabled):not(.selected) {
+    background-color: #f1f4f1; /* hover light green */
+}
+
+.slot-btn.selected {
+    background: #00b300 !important; /* full green after selection */
+    color: #fff !important;
+    font-weight: bold;
+    border: 2px solid #006600;
+}
+
+.slot-btn.slot-booked {
+    background-color: #dc3545;
+    color: #fff;
+    cursor: not-allowed;
+    border: 1px solid #a30000;
+}
+
+.slot-btn.slot-available {
+    background-color: rgb(33, 247, 4);
+    cursor: pointer;
+}
+
+.slot-btn:disabled {
+    background: #eee;
+    color: #999;
+    cursor: not-allowed;
+}
+
+/* ---- Services ---- */
+.services-box {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 15px;
+}
+
+.service-item {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: 2px solid #ddd;
+    background-color: #fff;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    user-select: none;
+}
+
+.service-item:hover {
+    border-color: #00c853;
+    background-color: #f0fff4;
+}
+
+.service-item input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.service-item span {
+    pointer-events: none;
+    transition: all 0.2s ease;
+    padding: 6px 12px;
+    border-radius: 6px;
+    display: inline-block;
+}
+
+.service-item input[type="checkbox"]:checked + span {
+    background-color: #00c853;
+    color: #fff;
+    font-weight: 700;
+}
+
+/* ---- Images ---- */
+.card img {
+    width: 100%;
+    height: 210px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-bottom: 15px;
+}
+
+/* ---- Animation ---- */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/*Fotter part css*/
+  
+  .footer {
+    background-color: #7a29c0;
+    padding: 40px;
+    color: black;
+    font-size: 14px;
+  }
+  
+  .footer-top {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    max-width: 1200px;
+    margin: auto;
+  }
+  
+  .footer-column {
+    flex: 1 1 180px;
+    margin: 20px;
+  }
+  
+  .footer-column h4 {
+    font-size: 16px;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+  }
+  
+  .footer-column a {
+    display: block;
+    color: white;
+    margin-bottom: 10px;
+    text-decoration: none;
+  }
+  
+  .footer-column a:hover {
+    text-decoration: underline;
+  }
+  
+  .dropdowns {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-top: 20px;
+  }
+  
+  select {
+    padding: 8px;
+    font-size: 14px;
+  }
+  
+  .flag {
+    width: 20px;
+    margin-right: 6px;
+    vertical-align: middle;
+  }
+  
+  .social-icons i {
+    font-size: 18px;
+    margin: 0 8px;
+    cursor: pointer;
+  }
+  
+  .app-links img {
+    height: 40px;
+    margin: 10px 0;
+  }
+  
+  .footer-bottom {
+    text-align: center;
+    font-size: 12px;
+    color: white;
+    margin-top: 30px;
+    border-top: 1px solid #ddd;
+    padding-top: 15px;
+  }
