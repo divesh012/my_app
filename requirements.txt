@@ -1,12 +1,5 @@
 Flask
-<<<<<<< HEAD
-razorpay
+gunicorn
 requests
-gunicorn
-datetime
-=======
-gunicorn
-pandas
 razorpay
-Flask-SQLAlchemy
->>>>>>> fcadb4415df9f7a0f118e0e00cf83695515981ee
+APScheduler
