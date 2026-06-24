@@ -1,11 +1,24 @@
+# Environment variables
+.env
+
+# SQLite database
+database.db
+*.db
+
+# Python cache
 __pycache__/
 *.pyc
-*.db
-*.env
-Lib/
-Include/
-Scripts/
-var/
-backup/
+
+# Virtual environment
+venv/
+.env/
+.venv/
+
+# VS Code
+.vscode/
+
+# Logs
+*.log
+
+# Uploaded files (optional)
 uploads/
-tempCodeRunnerFile.py

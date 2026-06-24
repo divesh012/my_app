@@ -1,5 +1,8 @@
 const payButton = document.getElementById("pay-button");
-const alertSound = document.getElementById("slot-alert-sound");
+console.log("Key:", razorpayKey);
+console.log("Amount:", platformFee);
+console.log("Order:", razorpayOrderId);
+console.log("Success URL:", paymentSuccessUrl);
 
 const razorpayOptions = {
     key: razorpayKey,
@@ -10,27 +13,47 @@ const razorpayOptions = {
     order_id: razorpayOrderId,
 
     handler(response) {
-        scheduleSlotReminder(slotDate, startTime);
+
+        console.log("PAYMENT SUCCESS");
+        console.log(response);
+
         submitPayment(response);
     },
 
     modal: {
         ondismiss() {
-            console.log("Payment popup closed.");
+            console.log("PAYMENT POPUP CLOSED");
         }
-    },
-
-    theme: {
-        color: "#3399cc"
     }
 };
 
+const rzp = new Razorpay(razorpayOptions);
+
+rzp.on("payment.failed", function(response) {
+
+    console.log("PAYMENT FAILED");
+
+    console.log(response.error);
+
+    alert(
+        response.error.description ||
+        "Payment Failed"
+    );
+});
+
 if (payButton) {
+
     payButton.addEventListener("click", (e) => {
+
         e.preventDefault();
-        new Razorpay(razorpayOptions).open();
+
+        console.log("OPENING PAYMENT");
+
+        rzp.open();
     });
 }
+
+
 
 
 

@@ -30,21 +30,43 @@ import razorpay
 app = Flask(__name__)
 app.secret_key = "your_secret_key"
 
+<<<<<<< HEAD
 ADMIN_USERNAME = "#"
 
 ADMIN_EMAIL="#"
 ADMIN_PASSWORD="#"
+=======
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
+ADMIN_USERNAME = os.getenv("ADMIN_USERNAME")
+ADMIN_EMAIL = os.getenv("ADMIN_EMAIL")
+ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD")
+
+RAZORPAY_KEY_ID = os.getenv("RAZORPAY_KEY_ID")
+RAZORPAY_KEY_SECRET = os.getenv("RAZORPAY_KEY_SECRET")
+>>>>>>> ea7a49e (Fix Razorpay env variables and payment flow)
 
 print("ENV EMAIL:", ADMIN_EMAIL)
-print("ENV PASSWORD:", ADMIN_PASSWORD)
+print("ENV EMAIL:", ADMIN_USERNAME)
+print("RAZORPAY KEY:", RAZORPAY_KEY_ID)
 # -------------------- RAZORPAY -------------------- #
- #RAZORPAY_KEY_ID = "rzp_test_RKFRNhf7xcHQgR"
- #RAZORPAY_KEY_SECRET = "hRgiFkFXxAFA2fACRGnmwo1F"
+
+#RAZORPAY_KEY_ID = "rzp_test_RKFRNhf7xcHQgR"
+#RAZORPAY_KEY_SECRET = "hRgiFkFXxAFA2fACRGnmwo1F"
+
 #razorpay_client = razorpay.Client(auth=(RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET))
 import razorpay
 
+<<<<<<< HEAD
 RAZORPAY_KEY_ID = "#"
 RAZORPAY_KEY_SECRET = "#"
+=======
+#RAZORPAY_KEY_ID = "#"
+#RAZORPAY_KEY_SECRET = "#"
+>>>>>>> ea7a49e (Fix Razorpay env variables and payment flow)
 
 razorpay_client = razorpay.Client(auth=(RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET))
 razorpay_client.set_app_details({"title": "Gloora Salon Booking", "version": "1.0"})
@@ -1396,11 +1418,16 @@ def get_booked_slots(salon_id, slot_date):
 @app.route("/payment/<int:salon_id>")
 def payment(salon_id):
 
+    print("PAYMENT ROUTE HIT")
+    print("SESSION:", dict(session))
+
     if "username" not in session or "user_id" not in session:
         flash("Please login first!", "error")
         return redirect(url_for("login_page"))
 
     booking = session.get("pending_booking")
+
+    print("PENDING BOOKING:", booking)
 
     if not booking:
         flash("No pending booking found!", "error")
@@ -1417,6 +1444,9 @@ def payment(salon_id):
             "currency": "INR",
             "payment_capture": 1
         })
+
+        print("RAZORPAY ORDER CREATED:", order["id"])
+
     except Exception as e:
         print("Razorpay Order Error:", e)
         flash("Unable to create payment order.", "error")
