@@ -30,12 +30,11 @@ import razorpay
 app = Flask(__name__)
 app.secret_key = "your_secret_key"
 
-<<<<<<< HEAD
 ADMIN_USERNAME = "#"
 
 ADMIN_EMAIL="#"
 ADMIN_PASSWORD="#"
-=======
+
 from dotenv import load_dotenv
 import os
 
@@ -47,7 +46,7 @@ ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD")
 
 RAZORPAY_KEY_ID = os.getenv("RAZORPAY_KEY_ID")
 RAZORPAY_KEY_SECRET = os.getenv("RAZORPAY_KEY_SECRET")
->>>>>>> ea7a49e (Fix Razorpay env variables and payment flow)
+
 
 print("ENV EMAIL:", ADMIN_EMAIL)
 print("ENV EMAIL:", ADMIN_USERNAME)
@@ -60,18 +59,14 @@ print("RAZORPAY KEY:", RAZORPAY_KEY_ID)
 #razorpay_client = razorpay.Client(auth=(RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET))
 import razorpay
 
-<<<<<<< HEAD
 RAZORPAY_KEY_ID = "#"
 RAZORPAY_KEY_SECRET = "#"
-=======
+
 #RAZORPAY_KEY_ID = "#"
 #RAZORPAY_KEY_SECRET = "#"
->>>>>>> ea7a49e (Fix Razorpay env variables and payment flow)
 
 razorpay_client = razorpay.Client(auth=(RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET))
 razorpay_client.set_app_details({"title": "Gloora Salon Booking", "version": "1.0"})
-
-
 
 # -------------------- GEOAPIFY -------------------- #
 GEOAPIFY_KEY = "a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6"
@@ -145,7 +140,6 @@ def send_sms(mobile, message):
     print("📩 FAST2SMS RESPONSE:", result)   # 👈 VERY IMPORTANT
 
     return result
-
 
 
 # -------------------- INITIALIZE TABLES -------------------- #
