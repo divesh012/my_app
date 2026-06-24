@@ -1,126 +1,221 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <title>Book Slot - {{ salon.salon_name }}</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/book_slot.css') }}">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <meta charset="utf-8">
+    <title>Book Slot - {{ salon.salon_name }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  
-  <style>
-    /* ---------------- SLOT BUTTON STYLES ---------------- */
-    #slot-container {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 15px;
-    }
-    .slot-btn {
-      padding: 8px 12px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      cursor: pointer;
-      background-color: #f0f0f0;
-      transition: 0.2s;
-    }
-    .slot-btn:hover:not(:disabled) {
-      background-color: #d0f0d0;
-    }
-    .slot-btn.selected {
-      background-color: #4caf50;
-      color: white;
-      font-weight: bold;
-    }
-    .slot-btn.slot-booked {
-      background-color: #f44336;
-      color: white;
-      cursor: not-allowed;
-    }
-    .slot-btn.slot-available {
-      background-color: #e0ffe0;
-      cursor: pointer;
-    }
-  </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/book_slot.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
+
 <body>
 
-<h1 class="logo">GLOOVI</h1>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <a href="{{ url_for('gender') }}">Home</a>
+        <a href="{{ url_for('about') }}">About</a>
+        <a href="{{ url_for('services_categories') }}">Services</a>
+        <a href="{{ url_for('help_page') }}">Help</a>
+    </nav>
 
-<!-- Navbar -->
-<nav class="navbar">
-    <a href="{{ url_for('gender') }}">Home</a>
-    <a href="{{ url_for('about') }}">About</a>
-    <a href="{{ url_for('services_categories') }}">Services & Categories</a>
-    <a href="{{ url_for('help_page') }}">Help</a>
-</nav>
+    <header>
+        <div class="header-top">
+            <h1>GLOOVI</h1>
 
-<div class="card">
-  <h2>Book Slot for {{ salon.salon_name }}</h2>
+            <div class="user-actions">
+                {% if session.get('username') %}
+                    <span>Welcome, {{ session.get('username') }}</span>
+                    <a href="{{ url_for('logout') }}">Logout</a>
+                {% else %}
+                    <a href="{{ url_for('male') }}?register=1">Register</a>
+                    <a href="{{ url_for('male') }}?login=1">Login</a>
+                {% endif %}
+            </div>
+        </div>
+    </header>
 
-  {% if salon.image %}
-    <img src="{{ url_for('static', filename='uploads/' + salon.image.split('/')[-1]) }}">
-  {% endif %}
+    <div class="card">
 
-  <p>📍 {{ salon.address }}</p>
-  <p>📞 {{ salon.contact }}</p>
+        <h2>Book Slot for {{ salon.salon_name }}</h2>
 
-  <form method="post" id="book-slot-form" data-salon-id="{{ salon.id }}">
-    <!-- Customer Name -->
-    <label>Your Name</label>
-    <input type="text" name="customer_name" required value="{{ username }}">
+        {% if salon.image %}
+            <img
+                src="{{ url_for('static', filename='uploads/' + salon.image.split('/')[-1]) }}"
+                alt="{{ salon.salon_name }}">
+        {% endif %}
 
-    <!-- Services -->
-    {% if services %}
-    <label>Select Services</label>
-    <div class="services-box">
-      {% for service in services %}
-      <label class="service-item">
-        <input type="checkbox"
-               name="selected_services[]"
-               value="{{ service.id }}"
-               data-price="{{ service.price }}"
-               onchange="calculateTotal()">
-        <span>{{ service.name }} — ₹{{ service.price }}</span>
-      </label>
-      {% endfor %}
+        <p>📍 {{ salon.address }}</p>
+        <p>📞 {{ salon.contact }}</p>
+
+        <form method="post"
+              id="book-slot-form"
+              data-salon-id="{{ salon.id }}">
+
+            <!-- Customer Name -->
+            <label>Your Name</label>
+
+            <input
+                type="text"
+                name="customer_name"
+                value="{{ username }}"
+                readonly>
+
+            <!-- Services -->
+            {% if services %}
+
+                <label>Select Services</label>
+
+                <div class="services-box">
+
+                    {% for service in services %}
+                        <label class="service-item">
+
+                            <input
+                                type="checkbox"
+                                name="selected_services[]"
+                                value="{{ service.id }}"
+                                data-price="{{ service.price }}"
+                                onchange="calculateTotal()">
+
+                            <span>
+                                {{ service.name }} — ₹{{ service.price }}
+                            </span>
+
+                        </label>
+                    {% endfor %}
+
+                </div>
+
+                <!-- Booking Note -->
+                <div class="booking-note">
+
+                    <h3>Each service requires 30 minutes.</h3>
+
+                    <p>
+                        1 service = 30 minutes<br>
+                        2 services = 60 minutes<br>
+                        3 services = 90 minutes
+                    </p>
+
+                    <p>
+                        तुमच्या निवडलेल्या प्रत्येक सेवेसाठी ३० मिनिटे राखीव ठेवली जातील.
+                    </p>
+                        <h3>
+                        Platform Fee:
+                        ₹ <span id="platform_fee">0</span>
+                    </h3>
+                </div>
+
+                <!-- Price Summary -->
+                <div class="price-summary">
+
+                    <h3>
+                        Service Charges:
+                        ₹ <span id="total">0</span>
+                    </h3>
+
+                    
+
+                </div>
+
+                <input
+                    type="hidden"
+                    name="total_price"
+                    id="total_price"
+                    value="0">
+
+            {% else %}
+
+                <p style="color:red;">
+                    No services available for this salon.
+                </p>
+
+            {% endif %}
+
+            <!-- Date -->
+            <label>Choose Date</label>
+
+            <input
+                type="date"
+                name="slot_date"
+                id="slot_date"
+                required
+                value="{{ current_datetime.now().strftime('%Y-%m-%d') }}"
+                max="{{ current_datetime.now().strftime('%Y-%m-%d') }}">
+
+            <!-- Hidden Time Input -->
+            <input
+                type="hidden"
+                name="slot_time"
+                id="slot_time"
+                required>
+
+            <!-- Slots -->
+            <label>Choose Time Slot</label>
+            <h5>
+    Duration:
+    <span id="duration">0</span> Minutes
+</h5>
+
+            <div id="slot-container">
+
+                {% for hour in range(7, 22) %}
+
+                    <!-- HH:00 - HH:30 -->
+                    <button
+                        type="button"
+                        class="slot-btn"
+                        data-time="{{ '%02d:00'|format(hour) }}">
+
+                        {{ '%02d:00'|format(hour) }}
+                        -
+                        {{ '%02d:30'|format(hour) }}
+
+                    </button>
+
+                    <!-- HH:30 - NEXT_HOUR:00 -->
+                    {% if hour != 21 %}
+
+                        <button
+                            type="button"
+                            class="slot-btn"
+                            data-time="{{ '%02d:30'|format(hour) }}">
+
+                            {{ '%02d:30'|format(hour) }}
+                            -
+                            {{ '%02d:00'|format(hour + 1) }}
+
+                        </button>
+
+                    {% endif %}
+
+                {% endfor %}
+
+            </div>
+
+            <!-- Submit -->
+            <button type="submit" class="btn-book">
+                Book Slot & Pay
+            </button>
+
+            <a href="{{ url_for('show_salons') }}"
+               class="btn-show">
+                Show Salons
+            </a>
+
+        </form>
+
     </div>
 
-    <h3>Total Amount: ₹ <span id="total">0</span></h3>
-    <input type="hidden" name="total_price" id="total_price" value="0">
-    {% else %}
-      <p style="color:red;">No services available for this salon.</p>
-    {% endif %}
-
-    <!-- Date -->
-    <label>Choose Date</label>
-    <input type="date" name="slot_date" id="slot_date" required min="{{ current_datetime.now().strftime('%Y-%m-%d') }}">
-
-    <!-- Hidden Time Input -->
-    <input type="hidden" name="slot_time" id="slot_time" required>
-
-    <!-- Slots -->
-    <label>Choose Time Slot</label>
-    <div id="slot-container">
-      {% for hour in range(7, 22) %}
-        <button type="button" class="slot-btn" data-time="{{ "%02d:00"|format(hour) }}">
-          {{ "%02d:00"|format(hour) }} - {{ "%02d:00"|format(hour+1) }}
-        </button>
-      {% endfor %}
-    </div>
-
-    <!-- Submit -->
-    <button type="submit" class="btn-book">Book Slot & Pay</button>
-    <a href="{{ url_for('show_salons') }}" class="btn-show">Show Salons</a>
-  </form>
-</div>
-
-<!-- Footer Section -->
+    <!-- Footer -->
     <div class="footer" id="footer">
+
         <div class="footer-top">
 
             <div class="footer-column">
                 <h4>About SalonFinder</h4>
+
                 <a href="#">Who We Are</a>
                 <a href="#">Blog</a>
                 <a href="#">Work With Us</a>
@@ -130,6 +225,7 @@
 
             <div class="footer-column">
                 <h4>SalonVerse</h4>
+
                 <a href="#">SalonFinder</a>
                 <a href="#">BeautyVerse</a>
                 <a href="#">HairCare Hub</a>
@@ -138,13 +234,24 @@
 
             <div class="footer-column">
                 <h4>Learn More</h4>
-                <a href="{{ url_for('cancellation') }}">Cancellation & Refund Policy</a>
-                <a href="{{ url_for('privacy') }}">Privacy Policy</a>
-                <a href="{{ url_for('term') }}">Terms & Conditions</a>
+
+                <a href="{{ url_for('cancellation') }}">
+                    Cancellation & Refund Policy
+                </a>
+
+                <a href="{{ url_for('privacy') }}">
+                    Privacy Policy
+                </a>
+
+                <a href="{{ url_for('term') }}">
+                    Terms & Conditions
+                </a>
             </div>
 
             <div class="footer-column">
+
                 <h4>Social Links</h4>
+
                 <div class="social-icons">
                     <i class="fab fa-linkedin"></i>
                     <i class="fab fa-instagram"></i>
@@ -154,13 +261,19 @@
                 </div>
 
                 <div class="app-links">
-                    <img src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg" alt="App Store">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" alt="Play Store">
+                    <img src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg"
+                         alt="App Store">
+
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg"
+                         alt="Play Store">
                 </div>
+
             </div>
 
             <div class="footer-column">
+
                 <div class="dropdowns">
+
                     <select>
                         <option selected>🇮🇳 India</option>
                         <option>🇺🇸 United States</option>
@@ -180,15 +293,22 @@
                         <option>Español</option>
                         <option>हिन्दी</option>
                     </select>
+
                 </div>
+
             </div>
+
         </div>
 
         <div class="footer-bottom">
-            © 2025 GLOOVI™ Ltd. All rights reserved. By continuing, you agree to our Terms, Privacy Policy, and Cookie Policy.
+            © 2025 GLOOVI™ Ltd. All rights reserved.
+            By continuing, you agree to our Terms,
+            Privacy Policy, and Cookie Policy.
         </div>
+
     </div>
-<script src="{{ url_for('static', filename='javascript/book_slot.js') }}"></script>
+
+    <script src="{{ url_for('static', filename='javascript/book_slot.js') }}"></script>
 
 </body>
 </html>

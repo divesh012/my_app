@@ -30,16 +30,27 @@ import razorpay
 app = Flask(__name__)
 app.secret_key = "your_secret_key"
 
+ADMIN_USERNAME = "divesh05"
 
+ADMIN_EMAIL="diveshkuthe8556@gmail.com"
+ADMIN_PASSWORD="Divesh@123"
+
+print("ENV EMAIL:", ADMIN_EMAIL)
+print("ENV PASSWORD:", ADMIN_PASSWORD)
 # -------------------- RAZORPAY -------------------- #
-# RAZORPAY_KEY_ID = "rzp_test_RKFRNhf7xcHQgR"
-# RAZORPAY_KEY_SECRET = "hRgiFkFXxAFA2fACRGnmwo1F"
-# razorpay_client = razorpay.Client(auth=(RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET))
+ #RAZORPAY_KEY_ID = "rzp_test_RKFRNhf7xcHQgR"
+ #RAZORPAY_KEY_SECRET = "hRgiFkFXxAFA2fACRGnmwo1F"
+#razorpay_client = razorpay.Client(auth=(RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET))
 import razorpay
 
+<<<<<<< HEAD
 RAZORPAY_KEY_ID = "#"
 RAZORPAY_KEY_SECRET = "#"
 
+=======
+RAZORPAY_KEY_ID = "rzp_live_T336CKhpUUNDx2"
+RAZORPAY_KEY_SECRET = "s2xRVEE7468mQUD7pWK55bFV"
+>>>>>>> 7be6449 (Add Razorpay payment debugging and verification improvements)
 razorpay_client = razorpay.Client(auth=(RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET))
 razorpay_client.set_app_details({"title": "Gloora Salon Booking", "version": "1.0"})
 
@@ -172,14 +183,19 @@ def init_all_databases():
         # SALON ↔ SERVICES
         cur.execute("""
         CREATE TABLE IF NOT EXISTS salon_services (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            salon_id INTEGER NOT NULL,
-            service_id INTEGER NOT NULL,
-                    
-            price REAL,
-            FOREIGN KEY (salon_id) REFERENCES salons_data(id),
-            FOREIGN KEY (service_id) REFERENCES services(id)
-        )
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    salon_id INTEGER NOT NULL,
+    service_id INTEGER NOT NULL,
+    price REAL,
+
+    FOREIGN KEY (salon_id)
+        REFERENCES salons_data(id)
+        ON DELETE CASCADE,
+
+    FOREIGN KEY (service_id)
+        REFERENCES services(id)
+        ON DELETE CASCADE
+)
         """)
         #Slot Reminders
         cur.execute("""
@@ -196,24 +212,32 @@ def init_all_databases():
         # SLOT BOOKINGS
         cur.execute("""
         CREATE TABLE IF NOT EXISTS slot_data (
-             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            user_id INTEGER,
-            username TEXT,
-            salon_id INTEGER,
-            service_id INTEGER,
-            slot_date TEXT,
-            slot_time TEXT,
-            start_time TEXT,
-            end_time TEXT,
-            selected_services TEXT DEFAULT '',
-            total_price REAL DEFAULT 0,
-            payment_status TEXT DEFAULT 'pending',
-            FOREIGN KEY (user_id) REFERENCES users_data(id),
-            FOREIGN KEY (salon_id) REFERENCES salons_data(id),
-            FOREIGN KEY (service_id) REFERENCES services(id)
-        )
-        """)
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER,
+    username TEXT,
+    salon_id INTEGER,
+    service_id INTEGER,
+    slot_date TEXT,
+    slot_time TEXT,
+    start_time TEXT,
+    end_time TEXT,
+    selected_services TEXT DEFAULT '',
+    total_price REAL DEFAULT 0,
+    payment_status TEXT DEFAULT 'pending',
 
+    FOREIGN KEY (user_id)
+        REFERENCES users_data(id)
+        ON DELETE CASCADE,
+
+    FOREIGN KEY (salon_id)
+        REFERENCES salons_data(id)
+        ON DELETE CASCADE,
+
+    FOREIGN KEY (service_id)
+        REFERENCES services(id)
+        ON DELETE CASCADE
+    )
+        """)
         conn.commit()
         print("✔ All tables created successfully in database.db")
 
@@ -319,29 +343,61 @@ def privacy():
 # -------------------- AUTH (Login Page name normalized) -------------------- #
 @app.route("/login", methods=["GET", "POST"])
 def login_page():
+
     if request.method == "POST":
+
         username = request.form.get("username", "").strip()
         email = request.form.get("email", "").strip()
         password = request.form.get("password", "").strip()
 
+        # ---------------- ADMIN LOGIN ----------------
+
+        if username == ADMIN_USERNAME and email == ADMIN_EMAIL and password == ADMIN_PASSWORD:
+
+            session.clear()
+            session["admin"] = True
+
+            flash("Admin Login Successful", "success")
+
+            return redirect(url_for("admin_dashboard"))
+
+        # ---------------- NORMAL USER LOGIN ----------------
+
         conn = get_db_connection()
+
         user = conn.execute(
-            "SELECT * FROM users_data WHERE username=? AND email=?",
+            """
+            SELECT *
+            FROM users_data
+            WHERE username=? AND email=?
+            """,
             (username, email)
         ).fetchone()
+
         conn.close()
 
-        if user and check_password_hash(user["password"], password):
+        if user and check_password_hash(
+            user["password"],
+            password
+        ):
+
+            session.clear()
+
             session["username"] = user["username"]
             session["email"] = user["email"]
             session["user_id"] = user["id"]
-            flash(f"Welcome back, {user['username']}!", "success")
-            return redirect(url_for("help_page"))
-        else:
-            flash("Invalid credentials!", "error")
-            return redirect(url_for("male", login=1))
 
-    # 👇 NO TEMPLATE LOAD HERE
+            flash(
+                f"Welcome back, {user['username']}!",
+                "success"
+            )
+
+            return redirect(url_for("help_page"))
+
+        flash("Invalid credentials!", "error")
+
+        return redirect(url_for("male", login=1))
+
     return redirect(url_for("male", login=1))
 
 
@@ -350,6 +406,114 @@ def logout():
     session.clear()
     flash("Logged out successfully.", "success")
     return redirect(url_for("gender"))
+
+#-------------ADMIN DASHBOARD----------------------------#
+
+@app.route('/admin/dashboard')
+def admin_dashboard():
+
+    if not session.get("admin"):
+        return redirect(url_for("male", login=1))
+
+    conn = get_db_connection()
+
+    users = conn.execute(
+        "SELECT * FROM users_data"
+    ).fetchall()
+
+    salons = conn.execute(
+        "SELECT * FROM salons_data"
+    ).fetchall()
+
+    services = conn.execute(
+        "SELECT * FROM services"
+    ).fetchall()
+
+    bookings = conn.execute(
+        "SELECT * FROM slot_data"
+    ).fetchall()
+
+    conn.close()
+
+    return render_template(
+        "admin_dashboard.html",
+        users=users,
+        salons=salons,
+        services=services,
+        bookings=bookings
+    )
+
+@app.route("/admin-logout")
+def admin_logout():
+
+    session.clear()
+
+    flash("Admin Logged Out", "success")
+
+    return redirect(url_for("gender"))
+#-----------------DELETE USER-----------------------------------#
+
+@app.route('/admin/delete_user/<int:id>')
+def delete_user(id):
+
+    conn = get_db_connection()
+
+    conn.execute(
+        "DELETE FROM users_data WHERE id=?",
+        (id,)
+    )
+
+    conn.commit()
+    conn.close()
+
+    return redirect(url_for('admin_dashboard'))
+
+@app.route('/admin/delete_salon/<int:id>')
+def delete_salon(id):
+
+    conn = get_db_connection()
+
+    conn.execute(
+        "DELETE FROM salons_data WHERE id=?",
+        (id,)
+    )
+
+    conn.commit()
+    conn.close()
+
+    return redirect(url_for('admin_dashboard'))
+
+
+@app.route('/admin/delete_service/<int:id>')
+def delete_service(id):
+
+    conn = get_db_connection()
+
+    conn.execute(
+        "DELETE FROM services WHERE id=?",
+        (id,)
+    )
+
+    conn.commit()
+    conn.close()
+
+    return redirect(url_for('admin_dashboard'))
+
+@app.route('/admin/delete_booking/<int:id>')
+def delete_booking(id):
+
+    conn = get_db_connection()
+
+    conn.execute(
+        "DELETE FROM slot_data WHERE id=?",
+        (id,)
+    )
+
+    conn.commit()
+    conn.close()
+
+    return redirect(url_for('admin_dashboard'))
+
 
 # -------------------- COMMON AUTH HANDLER -------------------- #
 def handle_auth(action, gender_page):
@@ -366,41 +530,93 @@ def handle_auth(action, gender_page):
         flash("Please enter a valid Gmail address.", "error")
         return redirect(url_for(gender_page))
 
-    # ADMIN LOGIN (special)
-    if action == "login" and email.lower() == "admin@gmail.com" and password == "admin123":
-        session["admin"] = True
-        flash("Welcome, Admin!", "success")
-        return redirect(url_for("database_views"))
-
     conn = get_db_connection()
     cur = conn.cursor()
 
+    # ---------------- REGISTER ----------------
     if action == "register":
+
         hashed_pw = generate_password_hash(password)
-        gender = gender_page  # "male" or "female"
+        gender = gender_page
 
         try:
             cur.execute("""
-                INSERT INTO users_data (username, email, mobile, password, gender)
+                INSERT INTO users_data
+                (username, email, mobile, password, gender)
                 VALUES (?, ?, ?, ?, ?)
             """, (username, email, mobile, hashed_pw, gender))
-            conn.commit()
-            flash("Registration successful! Please login.", "success")
-        except sqlite3.IntegrityError:
-            flash("Username, Email, or Mobile already exists!", "error")
 
+            conn.commit()
+
+            flash(
+                "Registration successful! Please login.",
+                "success"
+            )
+
+        except sqlite3.IntegrityError:
+            flash(
+                "Username, Email, or Mobile already exists!",
+                "error"
+            )
+
+        conn.close()
+        return redirect(url_for(gender_page))
+
+    # ---------------- LOGIN ----------------
     elif action == "login":
-        cur.execute("SELECT * FROM users_data WHERE username=? AND email=?", (username, email))
+
+        # ADMIN LOGIN
+        if (
+            username == ADMIN_USERNAME
+            and email == ADMIN_EMAIL
+            and password == ADMIN_PASSWORD
+        ):
+
+            session.clear()
+            session["admin"] = True
+
+            flash("Admin Login Successful", "success")
+
+            conn.close()
+
+            return redirect(url_for("admin_dashboard"))
+
+        # NORMAL USER LOGIN
+        cur.execute(
+            """
+            SELECT *
+            FROM users_data
+            WHERE username=? AND email=?
+            """,
+            (username, email)
+        )
+
         user = cur.fetchone()
-        if user and check_password_hash(user["password"], password):
+
+        if user and check_password_hash(
+            user["password"],
+            password
+        ):
+
+            session.clear()
+
             session["username"] = user["username"]
             session["email"] = user["email"]
             session["user_id"] = user["id"]
-            flash(f"Welcome back, {user['username']}!", "success")
-        else:
-            flash("Invalid credentials!", "error")
+
+            flash(
+                f"Welcome back, {user['username']}!",
+                "success"
+            )
+
+            conn.close()
+
+            return redirect(url_for("help_page"))
+
+        flash("Invalid credentials!", "error")
 
     conn.close()
+
     return redirect(url_for(gender_page))
 
 # -------------------- MALE / FEMALE PAGES -------------------- #
@@ -431,8 +647,6 @@ def female():
         username=session.get("username")
     )
 
-
-import random
 # ------------------ FORGOT PASSWORD MALE ------------------ #
 @app.route("/forgot_password_male", methods=["GET", "POST"])
 def forgot_password_male():
@@ -842,7 +1056,6 @@ def worker_toggle_page(salon_id):
 
 
 
-# -------------------- WORKER PASSKEY VERIFICATION PAGE -------------------- #
 # -------------------- WORKER PASSKEY VERIFICATION PAGE (GET) -------------------- #
 @app.route("/verify_worker_page/<int:salon_id>")
 def verify_worker_page_get(salon_id):
@@ -920,11 +1133,35 @@ def update_worker_count(salon_id):
     flash(f"Worker count updated to {worker_count}", "success")
     return redirect(url_for("worker_toggle_page", salon_id=salon_id))
 
-# -------------------- BOOK SLOT -------------------- #
-from datetime import datetime, date
+from datetime import datetime, timedelta
+from flask import request, session, redirect, url_for, flash, render_template
+
+
+from datetime import datetime, timedelta
+
+# -------------------- SLOT HELPERS -------------------- #
+
+def generate_required_slots(start_time, service_count):
+
+    start_dt = datetime.strptime(start_time, "%H:%M")
+
+    slots = []
+
+    for i in range(service_count):
+        slot = (
+            start_dt + timedelta(minutes=i * 30)
+        ).strftime("%H:%M")
+
+        slots.append(slot)
+
+    return slots
+
+
+
 
 @app.route("/book-slot/<int:salon_id>", methods=["GET", "POST"])
 def book_slot_for_salon(salon_id):
+
     # ---------- AUTH CHECK ----------
     if "username" not in session or "user_id" not in session:
         flash("Please login first to book a slot!", "error")
@@ -933,8 +1170,10 @@ def book_slot_for_salon(salon_id):
     # ---------- FETCH SALON & SERVICES ----------
     with get_db_connection() as conn:
         salon = conn.execute(
-            "SELECT * FROM salons_data WHERE id=?", (salon_id,)
+            "SELECT * FROM salons_data WHERE id=?",
+            (salon_id,)
         ).fetchone()
+
         services = get_salon_services(conn, salon_id)
 
     if not salon:
@@ -943,9 +1182,11 @@ def book_slot_for_salon(salon_id):
 
     # ---------- POST ----------
     if request.method == "POST":
+
         slot_date = request.form.get("slot_date")
         slot_time = request.form.get("slot_time")
         selected_services = request.form.getlist("selected_services[]")
+
         total_price = request.form.get("total_price", "0")
 
         try:
@@ -953,55 +1194,153 @@ def book_slot_for_salon(salon_id):
         except ValueError:
             total_price = 0
 
-        # Validation
-        if not slot_date or not slot_time or total_price <= 0 or not selected_services:
-            flash("Please select date, time, and at least one service!", "error")
-            return redirect(url_for("book_slot_for_salon", salon_id=salon_id))
-
-        # Parse date and time safely
-        try:
-            selected_start = datetime.strptime(f"{slot_date} {slot_time}", "%Y-%m-%d %H:%M")
-        except ValueError:
-            flash("Invalid date or time!", "error")
-            return redirect(url_for("book_slot_for_salon", salon_id=salon_id))
-
-        # Prevent past date/time booking
-        if selected_start < datetime.now():
-            flash("You cannot select past date or time!", "error")
-            return redirect(url_for("book_slot_for_salon", salon_id=salon_id))
-
-        # ---------- CHECK WORKER AVAILABILITY ----------
-        with get_db_connection() as conn:
-            booking_count = conn.execute(
-                """
-                SELECT COUNT(*) FROM slot_data
-                WHERE salon_id=? AND slot_date=? AND slot_time=?
-                """,
-                (salon_id, slot_date, slot_time)
-            ).fetchone()[0]
-
-        if booking_count >= salon["worker_count"]:
-            flash("All workers are busy at this time.", "error")
-            return redirect(url_for("book_slot_for_salon", salon_id=salon_id))
-
-        # ---------- INSERT BOOKING ----------
-        with get_db_connection() as conn:
-            conn.execute(
-                """
-                INSERT INTO slot_data
-                (user_id, username, salon_id, slot_date, slot_time, selected_services, total_price, payment_status)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-                """,
-                (
-                    session["user_id"], session["username"], salon_id,
-                    slot_date, slot_time, ",".join(selected_services),
-                    total_price, "pending"
+        # ---------- VALIDATION ----------
+        if (
+            not slot_date or
+            not slot_time or
+            not selected_services or
+            total_price <= 0
+        ):
+            flash(
+                "Please select date, time and at least one service!",
+                "error"
+            )
+            return redirect(
+                url_for(
+                    "book_slot_for_salon",
+                    salon_id=salon_id
                 )
             )
-            conn.commit()
 
-        flash("Slot booked successfully!", "success")
-        return redirect(url_for("payment", salon_id=salon_id))
+        # ---------- PARSE DATETIME ----------
+        try:
+            selected_start = datetime.strptime(
+                f"{slot_date} {slot_time}",
+                "%Y-%m-%d %H:%M"
+            )
+        except ValueError:
+            flash("Invalid date or time!", "error")
+            return redirect(
+                url_for(
+                    "book_slot_for_salon",
+                    salon_id=salon_id
+                )
+            )
+
+        # ---------- PREVENT PAST BOOKINGS ----------
+        if selected_start < datetime.now():
+            flash(
+                "You cannot book past time slots!",
+                "error"
+            )
+            return redirect(
+                url_for(
+                    "book_slot_for_salon",
+                    salon_id=salon_id
+                )
+            )
+
+        # ---------- SLOT CALCULATION ----------
+        service_count = len(selected_services)
+
+        required_slots = generate_required_slots(
+            slot_time,
+            service_count
+        )
+
+        start_time = required_slots[0]
+
+        end_dt = (
+        datetime.strptime(start_time, "%H:%M")
+        + timedelta(minutes=30)
+)
+
+        end_time = end_dt.strftime("%H:%M")
+
+        # ---------- CHECK SALON CLOSING TIME ----------
+        if end_time > "22:00":
+            flash(
+                "Selected services exceed salon closing time (10:00 PM).",
+                "error"
+            )
+            return redirect(
+                url_for(
+                    "book_slot_for_salon",
+                    salon_id=salon_id
+                )
+            )
+
+        # ---------- CHECK SLOT AVAILABILITY ----------
+        with get_db_connection() as conn:
+
+            rows = conn.execute("""
+                SELECT slot_time
+                FROM slot_data
+                WHERE salon_id = ?
+                AND slot_date = ?
+                AND payment_status = 'paid'
+            """, (
+                salon_id,
+                slot_date
+            )).fetchall()
+
+        booked_count = {}
+
+        for row in rows:
+
+            if not row["slot_time"]:
+                continue
+
+            for slot in row["slot_time"].split(","):
+                booked_count[slot] = (
+                    booked_count.get(slot, 0) + 1
+                )
+
+        worker_count = max(
+            int(salon["worker_count"] or 1),
+            1
+        )
+
+        for slot in required_slots:
+
+            if booked_count.get(slot, 0) >= worker_count:
+                flash(
+                    f"Time slot {slot} is unavailable.",
+                    "error"
+                )
+                return redirect(
+                    url_for(
+                        "book_slot_for_salon",
+                        salon_id=salon_id
+                    )
+                )
+
+        # ---------- SAVE TEMP BOOKING ----------
+        session["pending_booking"] = {
+
+            "salon_id": salon_id,
+
+            "slot_date": slot_date,
+
+            "slot_time": ",".join(required_slots),
+
+            "start_time": start_time,
+
+            "end_time": end_time,
+
+            "selected_services": selected_services,
+
+            "service_total": total_price,
+
+            "platform_fee": service_count * 10
+        }
+
+        return redirect(
+            url_for(
+                "payment",
+                salon_id=salon_id
+            )
+        )
 
     # ---------- GET ----------
     return render_template(
@@ -1009,226 +1348,167 @@ def book_slot_for_salon(salon_id):
         salon=salon,
         services=services,
         username=session.get("username", ""),
-        current_datetime=datetime  # pass module safely
+        current_datetime=datetime
     )
-# ---------- OPTIONAL: FETCH BOOKED SLOTS (for slot buttons) ----------
+
 @app.route("/get-booked-slots/<int:salon_id>/<slot_date>")
 def get_booked_slots(salon_id, slot_date):
+
     with get_db_connection() as conn:
-        # Get worker count
-        worker_count = conn.execute(
-            "SELECT worker_count FROM salons_data WHERE id=?",
-            (salon_id,)
-        ).fetchone()[0]
 
-        # Count bookings per slot
-        rows = conn.execute(
-            "SELECT slot_time, COUNT(*) as count FROM slot_data WHERE salon_id=? AND slot_date=? GROUP BY slot_time",
-            (salon_id, slot_date)
-        ).fetchall()
+        salon = conn.execute("""
+            SELECT worker_count
+            FROM salons_data
+            WHERE id = ?
+        """, (salon_id,)).fetchone()
 
-        booked_slots = {row['slot_time']: row['count'] for row in rows}
-
-    return jsonify({"bookedSlots": booked_slots, "workerCount": worker_count})
-
-# -------------------- PAYMENT PROCESSING -------------------- #
-from flask import Flask, render_template, request, redirect, url_for, flash, session
-from datetime import datetime, timedelta
-import base64
-import hmac
-import hashlib
-
-# ========== ADD (Scheduler imports) ==========
-from apscheduler.schedulers.background import BackgroundScheduler
-from datetime import datetime
-
-# ========== ENSURE TABLE EXISTS ==========
-def ensure_slot_reminders_table():
-    with get_db_connection() as conn:
-        conn.execute("""
-        CREATE TABLE IF NOT EXISTS slot_reminders (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            user_id INTEGER NOT NULL,
-            salon_id INTEGER NOT NULL,
-            slot_datetime TEXT NOT NULL,
-            reminder_time TEXT NOT NULL,
-            sent INTEGER DEFAULT 0
+        worker_count = max(
+            int(salon["worker_count"] or 1),
+            1
         )
-        """)
-        conn.commit()
-        print("✅ slot_reminders table ensured.")
 
-# Call this before starting scheduler
-ensure_slot_reminders_table()
+        rows = conn.execute("""
+            SELECT slot_time
+            FROM slot_data
+            WHERE salon_id = ?
+            AND slot_date = ?
+            AND payment_status = 'paid'
+        """, (
+            salon_id,
+            slot_date
+        )).fetchall()
 
-# ========== ADD (Start scheduler once) ==========
-scheduler = BackgroundScheduler()
-scheduler.start()
+    booked_slots = {}
 
-# ========== ADD (Reminder job) ==========
-def check_slot_reminders():
-    now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    with get_db_connection() as conn:
-        reminders = conn.execute("""
-            SELECT id, user_id, slot_datetime
-            FROM slot_reminders
-            WHERE reminder_time <= ? AND sent = 0
-        """, (now,)).fetchall()
+    for row in rows:
 
-        for r in reminders:
-            # 🔔 PLACEHOLDER: SMS / notification / sound trigger
-            print(f"🔔 Slot reminder fired for user {r['user_id']} at {r['slot_datetime']}")
+        if not row["slot_time"]:
+            continue
 
-            conn.execute("""
-                UPDATE slot_reminders
-                SET sent = 1
-                WHERE id = ?
-            """, (r["id"],))
+        for slot in row["slot_time"].split(","):
+            booked_slots[slot] = (
+                booked_slots.get(slot, 0) + 1
+            )
 
-        conn.commit()
-
-# ========== ADD (Run reminder checker every minute) ==========
-scheduler.add_job(check_slot_reminders, "interval", minutes=1)
+    return jsonify({
+        "bookedSlots": booked_slots,
+        "workerCount": worker_count
+    })
 
 
-@app.route("/payment/<int:salon_id>", methods=["GET"])
+
+
+@app.route("/payment/<int:salon_id>")
 def payment(salon_id):
+
     if "username" not in session or "user_id" not in session:
         flash("Please login first!", "error")
         return redirect(url_for("login_page"))
 
-    with get_db_connection() as conn:
+    booking = session.get("pending_booking")
 
-        booking = conn.execute("""
-            SELECT id, slot_date, slot_time, total_price
-            FROM slot_data
-            WHERE salon_id = ? AND user_id = ?
-            ORDER BY id DESC
-            LIMIT 1
-        """, (salon_id, session["user_id"])).fetchone()
+    if not booking:
+        flash("No pending booking found!", "error")
+        return redirect(url_for("show_salons"))
 
-        if not booking:
-            flash("No booking found!", "error")
-            return redirect(url_for("show_salons"))
+    service_count = len(booking["selected_services"])
 
-        # ---- SLOT DISPLAY ----
-        start_dt = datetime.strptime(booking["slot_time"], "%H:%M")
-        end_dt = (start_dt + timedelta(hours=1)).strftime("%H:%M")
+    platform_fee = float(booking.get("platform_fee", 0))
+    service_total = float(booking.get("service_total", 0))
 
-        slots = [{
-            "slot_date": booking["slot_date"],
-            "slot_time": booking["slot_time"],
-            "slot_end": end_dt
-        }]
-
-        # ---- TOTAL PRICE (SAFE) ----
-        total_price = float(booking["total_price"] or 0)
-
-        if total_price <= 0:
-            flash("Invalid payment amount!", "error")
-            return redirect(url_for("show_salons"))
-
-        # ---- CREATE RAZORPAY ORDER ----
+    try:
         order = razorpay_client.order.create({
-            "amount": int(10 * 100),  # paise
+            "amount": int(platform_fee * 100),
             "currency": "INR",
             "payment_capture": 1
         })
+    except Exception as e:
+        print("Razorpay Order Error:", e)
+        flash("Unable to create payment order.", "error")
+        return redirect(url_for("show_salons"))
 
     return render_template(
         "payment.html",
         username=session["username"],
-        slots=slots,
-        total_price=total_price,
+        slot_date=booking["slot_date"],
+        start_time=booking["start_time"],
+        end_time=booking["end_time"],
+        service_total=service_total,
+        platform_fee=platform_fee,
+        service_count=service_count,
         razorpay_key=RAZORPAY_KEY_ID,
         razorpay_order=order
     )
-
 # -------------------- PAYMENT SUCCESS HANDLER -------------------- #
 @app.route("/payment-success", methods=["POST"])
 def payment_success():
+
+    print("STEP 1: Route Hit")
+
+    if "user_id" not in session:
+        print("STEP 1 FAILED")
+        flash("Please login first!", "error")
+        return redirect(url_for("login_page"))
 
     payment_id = request.form.get("razorpay_payment_id")
     order_id = request.form.get("razorpay_order_id")
     signature = request.form.get("razorpay_signature")
 
-    if not payment_id or not order_id or not signature:
-        flash("Payment failed!", "error")
-        return redirect(url_for("show_salons"))
+    print("STEP 2: Form Data Received")
 
-    # ---- VERIFY SIGNATURE ----
-    generated_signature = base64.b64encode(
-        hmac.new(
-            RAZORPAY_KEY_SECRET.encode(),
-            f"{order_id}|{payment_id}".encode(),
-            hashlib.sha256
-        ).digest()
-    ).decode()
+    try:
+        razorpay_client.utility.verify_payment_signature({
+            "razorpay_order_id": order_id,
+            "razorpay_payment_id": payment_id,
+            "razorpay_signature": signature
+        })
+        print("STEP 3: Signature Verified")
+    except Exception as e:
+        print("SIGNATURE ERROR:", e)
+        return "Signature Failed"
 
-    if generated_signature != signature:
-        flash("Payment verification failed!", "error")
-        return redirect(url_for("show_salons"))
+    try:
+        with get_db_connection() as conn:
 
-    # ---- MARK PAYMENT PAID AND HANDLE REMINDERS + NOTIFICATIONS ----
-    with get_db_connection() as conn:
-        # Mark last booking of this user as paid
-        conn.execute("""
-            UPDATE slot_data
-            SET payment_status = 'paid'
-            WHERE user_id = ?
-            ORDER BY id DESC
-            LIMIT 1
-        """, (session["user_id"],))
-
-        # Get booking details
-        booking = conn.execute("""
-            SELECT sd.id AS slot_id, sd.salon_id, sd.slot_date, sd.slot_time,
-                   sd.selected_services, sd.total_price,
-                   s.salon_name, s.contact AS salon_contact,
-                   u.username, u.mobile AS user_mobile
-            FROM slot_data sd
-            JOIN salons_data s ON sd.salon_id = s.id
-            JOIN users_data u ON sd.user_id = u.id
-            WHERE sd.user_id = ?
-            ORDER BY sd.id DESC
-            LIMIT 1
-        """, (session["user_id"],)).fetchone()
-
-        if booking:
-            # ---- ADD REMINDER FOR USER ----
-            slot_dt = datetime.strptime(
-                f"{booking['slot_date']} {booking['slot_time']}",
-                "%Y-%m-%d %H:%M"
-            )
-            reminder_time = slot_dt - timedelta(minutes=15)
+            print("STEP 4: DB Connected")
 
             conn.execute("""
-                INSERT INTO slot_reminders (
-                    user_id, salon_id, slot_datetime, reminder_time
-                ) VALUES (?, ?, ?, ?)
-            """, (
-                session["user_id"],
-                booking["salon_id"],
-                slot_dt.strftime("%Y-%m-%d %H:%M:%S"),
-                reminder_time.strftime("%Y-%m-%d %H:%M:%S")
-            ))
-
-            # ---- OPTIONAL: SEND SMS TO SALON OWNER ----
-            try:
-                owner_msg = (
-                    f"New slot booked at {booking['salon_name']} by {booking['username']} "
-                    f"on {booking['slot_date']} at {booking['slot_time']}. "
-                    f"Services: {booking['selected_services']} | Amount: ₹{booking['total_price']}"
+                UPDATE slot_data
+                SET payment_status='paid'
+                WHERE id = (
+                    SELECT id
+                    FROM slot_data
+                    WHERE user_id=?
+                    ORDER BY id DESC
+                    LIMIT 1
                 )
-                send_sms(booking['salon_contact'], owner_msg)
-            except Exception as e:
-                print(f"Failed to send SMS to salon owner: {e}")
+            """, (session["user_id"],))
 
-        conn.commit()
+            print("STEP 5: Payment Updated")
 
-    flash("Payment successful! Slot booked.", "success")
+            booking = conn.execute("""
+                SELECT *
+                FROM slot_data
+                WHERE user_id=?
+                ORDER BY id DESC
+                LIMIT 1
+            """, (session["user_id"],)).fetchone()
+
+            print("STEP 6: Booking Found =", booking is not None)
+
+            conn.commit()
+
+        print("STEP 7: Commit Done")
+
+    except Exception as e:
+        print("DATABASE ERROR:", e)
+        return f"DB ERROR: {e}"
+
+    print("STEP 8: Redirecting")
+
     return redirect(url_for("show_salons"))
 
+print("PAYMENT SUCCESS ROUTE HIT")
 # -------------------- ADMIN DATABASE VIEW -------------------- #
 @app.route("/database_views")
 def database_views():

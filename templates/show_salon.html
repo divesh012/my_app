@@ -13,22 +13,41 @@
 
 <body>
 
+
+  <header>
+    <div class="header-top">
+        <h1>GLOOVI</h1>
+
+        <div class="user-actions">
+            {% if session.get('username') %}
+                <span>Welcome, {{ session.get('username') }}</span>
+                <a href="{{ url_for('logout') }}">Logout</a>
+            {% else %}
+                <a href="{{ url_for('male') }}?register=1">Register</a>
+                <a href="{{ url_for('male') }}?login=1">Login</a>
+            {% endif %}
+        </div>
+    </div>
+</header>
+
+<nav class="navbar">
+    <div class="nav-left">
+        <a href="{{ url_for('gender') }}">Home</a>
+        <a href="{{ url_for('about') }}">About</a>
+        <a href="{{ url_for('services_categories') }}">Services</a>
+        <a href="{{ url_for('help_page') }}">Help</a>
+    </div>
+
+    <div class="nav-right">
+        <h2>Registered Salons</h2>
+
+        <a class="btn add-btn" href="{{ url_for('register_salon') }}">
+            + Add New Salon
+        </a>
+    </div>
+</nav>
+
 <div class="wrap">
-
-  <!-- HEADER -->
-  <div class="top">
-    <h2>Registered Salons</h2>
-    <a class="btn add-btn" href="{{ url_for('register_salon') }}">+ Add New Salon</a>
-  </div>
-
-  <!-- NAVBAR -->
-  <div class="navbar">
-    <a href="{{ url_for('gender') }}">Home</a>
-    <a href="{{ url_for('about') }}">About</a>
-    <a href="{{ url_for('services_categories') }}">Services & Categories</a>
-    <a href="{{ url_for('help_page') }}">Contact Us</a>
-  </div>
-
   <div class="search_wrapper">
     <form class="search_box" method="GET" action="{{ url_for('show_salons') }}">
         <input type="text"

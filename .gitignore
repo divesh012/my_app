@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+*.db
+*.env
+Lib/
+Include/
+Scripts/
+var/
+backup/
+uploads/
+tempCodeRunnerFile.py

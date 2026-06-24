@@ -5,18 +5,17 @@
     <title>GLOOVI - Select Gender</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/gender.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
 <body>
 
-    <!-- Navigation Bar -->
-    <div class="navbar" style="text-align:center; margin: 20px;">
-        <a href="{{ url_for('gender') }}">Home</a>
-        <a href="{{ url_for('about') }}" class="active">About</a>
-        <a href="{{ url_for('services_categories') }}">Services & Categories</a>
-        <!-- <a href="{{ url_for('contact_us') }}">Contact Us</a> -->
-        <a href="{{ url_for('help_page') }}">Contact Us</a>
-    </div>
+  <div class="navbar">
+    <a href="{{ url_for('gender') }}">Home</a>
+    <a href="{{ url_for('about') }}">About</a>
+    <a href="{{ url_for('services_categories') }}">Services</a>
+    <a href="{{ url_for('help_page') }}">Help</a>
+</div>
 
     <!-- Hero Section -->
     <section class="hero">
@@ -42,7 +41,6 @@
             <a href="{{ url_for('male') }}"><button class="gender-btn">Male</button></a>
             <a href="{{ url_for('female') }}"><button class="gender-btn">Female</button></a>
         </div>
-        <p>Admin login: email <b>admin@gmail.com</b>, password <b>admin123</b></p>
     </section>
 
     <!-- Location Section -->
