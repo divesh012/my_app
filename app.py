@@ -43,7 +43,6 @@ print("ENV PASSWORD:", ADMIN_PASSWORD)
 #razorpay_client = razorpay.Client(auth=(RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET))
 import razorpay
 
-<<<<<<< HEAD
 RAZORPAY_KEY_ID = "#"
 RAZORPAY_KEY_SECRET = "#"
 
