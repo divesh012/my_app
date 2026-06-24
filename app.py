@@ -30,10 +30,10 @@ import razorpay
 app = Flask(__name__)
 app.secret_key = "your_secret_key"
 
-ADMIN_USERNAME = "#"
+# ADMIN_USERNAME = "#"
 
-ADMIN_EMAIL="#"
-ADMIN_PASSWORD="#"
+# ADMIN_EMAIL="#"
+# ADMIN_PASSWORD="#"
 
 from dotenv import load_dotenv
 import os
@@ -48,9 +48,9 @@ RAZORPAY_KEY_ID = os.getenv("RAZORPAY_KEY_ID")
 RAZORPAY_KEY_SECRET = os.getenv("RAZORPAY_KEY_SECRET")
 
 
-print("ENV EMAIL:", ADMIN_EMAIL)
-print("ENV EMAIL:", ADMIN_USERNAME)
-print("RAZORPAY KEY:", RAZORPAY_KEY_ID)
+# print("ENV EMAIL:", ADMIN_EMAIL)
+# print("ENV EMAIL:", ADMIN_USERNAME)
+# print("RAZORPAY KEY:", RAZORPAY_KEY_ID)
 # -------------------- RAZORPAY -------------------- #
 
 #RAZORPAY_KEY_ID = "rzp_test_RKFRNhf7xcHQgR"
@@ -59,8 +59,8 @@ print("RAZORPAY KEY:", RAZORPAY_KEY_ID)
 #razorpay_client = razorpay.Client(auth=(RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET))
 import razorpay
 
-RAZORPAY_KEY_ID = "#"
-RAZORPAY_KEY_SECRET = "#"
+# RAZORPAY_KEY_ID = "#"
+# RAZORPAY_KEY_SECRET = "#"
 
 #RAZORPAY_KEY_ID = "#"
 #RAZORPAY_KEY_SECRET = "#"
